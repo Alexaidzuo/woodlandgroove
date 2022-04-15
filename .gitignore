@@ -1,0 +1,19 @@
+# Env Config
+.htaccess
+wp-config.php
+wp-admin/google-web-fonts.txt
+
+# W3 Total Cache
+wp-content/advanced-cache.php
+wp-content/cache/
+wp-content/db.php
+wp-content/object-cache.php
+wp-content/w3tc-config/
+
+wp-content/uploads/cache/wpml/
+
+wp-content/plugins/update-alt-attribute/logs/
+
+wp-content/uploads/formidable/
+
+.DS_Store
