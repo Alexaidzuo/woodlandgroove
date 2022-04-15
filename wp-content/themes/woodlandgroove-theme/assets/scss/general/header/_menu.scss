@@ -1,10 +1,10 @@
 
 .logo-menu-wrapper{
-	
+
 	.site-branding{
 		margin-right: auto;
 	}
-	
+
 	&:after{
 		content: '';
 		background-color: rgba(0, 0, 0, 0.4);
@@ -26,13 +26,13 @@
 			visibility: visible;
 		}
 	}
-	  
+
 	.main-navigation {
-	
+
 		min-width: 270px;
 		top: 0;
 		margin: auto;
-	
+
 		.admin-bar &{
 			top: 32px;
 		}
@@ -51,7 +51,7 @@
 				right: 10px;
 			}
 		}
-		
+
 		@include max-mq($responsive-toggle-breakpoint) {
 			background-color: $white;
 			position: fixed;
@@ -65,15 +65,15 @@
 			.menu-opened & {
 				left: 0%;
 			}
-	
+
 		}
-	
+
 		.main-menu-container {
-			
+
 			ul {
 				margin: 0;
 				padding: 0;
-	
+
 				li {
 					display: block;
 					margin: 0;
@@ -88,7 +88,7 @@
 					&:hover{
 						color: $primary-color;
 					}
-	
+
 					@include min-mq($lg) {
 						display: inline-block;
 					}
@@ -99,14 +99,22 @@
 							content: none;
 						}
 					}
-	
+
 					a {
 						padding: 10px 20px;
 						display: block;
 						position: relative;
+						font-size: 13px;
 						font-weight: 600;
 						color: inherit;
 						width: 100%;
+						text-transform: uppercase;
+						border-bottom: 2px solid transparent;
+						transition: $dur $ease;
+
+						&:hover {
+							border-bottom: 2px solid red;
+						}
 
 						@include max-mq($mac) {
 							padding: 15px;
@@ -124,15 +132,15 @@
 					}
 				}
 			}
-	
+
 			.sub-menu {
-	
+
 				@include max-mq($lg - 1) {
 					display: none;
 					margin: 0;
 					padding: 0 0 0 25px;
 				}
-	
+
 				@include min-mq($lg) {
 					background-color: #fff;
 					box-shadow: 0 5px 20px rgba(#000, .1);
@@ -148,35 +156,35 @@
 					width: 200px;
 					z-index: 10;
 				}
-	
+
 				li {
 					display: block;
-	
+
 					a {
 						padding: 10px 20px;
-	
+
 						@include max-mq($lg - 1) {
 							padding: 10px 0;
 						}
 					}
-	
+
 					&:not(:last-child) {
-	
+
 						@include min-mq($lg) {
 							border-bottom: 1px solid rgba(#000, .1);
 						}
 					}
 				}
-	
+
 				.sub-menu {
-	
+
 					@include min-mq($lg) {
 						left: 100%;
 						right: auto;
 						top: 0;
 						z-index: 11;
 					}
-	
+
 					@include min-mq($lt) {
 						left: 100%;
 						right: auto;
@@ -184,11 +192,11 @@
 				}
 
 			}
-	
+
 			.menu-item-has-children {
-	
+
 				&:hover {
-	
+
 					>.sub-menu {
 						opacity: 1;
 						visibility: visible;
@@ -196,7 +204,7 @@
 				}
 			}
 
-			
+
 			@include max-mq($responsive-toggle-breakpoint) {
 				width: 100%;
 				margin-bottom: 40px;

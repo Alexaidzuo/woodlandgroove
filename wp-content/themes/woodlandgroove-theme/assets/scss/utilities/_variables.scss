@@ -11,8 +11,8 @@ $black:				#000000;
 $gray:				#aeaeae;
 
 // Fonts
-$primary-font: serif;
-$secondary-font: sans-serif;
+$primary-font: 'Raleway', sans-serif;
+$secondary-font: 'Quicksand', sans-serif;
 
 // Font Sizes
 $font-size-xsmall:	12px;
@@ -47,3 +47,6 @@ $toggle-menu-width: 25px;
 $toggle-menu-bar-height: 3px;
 $toggle-menu-bar-color: $primary-color;
 $toggle-menu-bar-active-color: transparent;
+
+$dur: 350ms;
+$ease: ease;
