@@ -3927,11 +3927,20 @@ h1 {
   transition: 350ms ease;
 }
 
+.itab__item:hover .itab__item-image {
+  border: 8px solid #666666;
+}
+
+.itab__item:hover .itab__item-image::after {
+  opacity: 1;
+}
+
 .itab__item:hover .btn {
   background-color: #666666;
 }
 
 .itab__item-image {
+  display: block;
   position: relative;
   display: block;
   width: 300px;
@@ -3940,6 +3949,24 @@ h1 {
   border: 8px solid #458a40;
   margin: 0 auto;
   overflow: hidden;
+  -webkit-transition: 350ms ease;
+  -o-transition: 350ms ease;
+  transition: 350ms ease;
+}
+
+.itab__item-image::after {
+  display: block;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  -webkit-transition: 350ms ease;
+  -o-transition: 350ms ease;
+  transition: 350ms ease;
 }
 
 @media (max-width: 767px) {
@@ -3955,6 +3982,16 @@ h1 {
   height: 300px;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.itab__item-image img::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 3;
 }
 
 .itab__item-title {
