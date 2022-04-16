@@ -6,6 +6,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class FrmViewsLayoutHelper {
 
+	const ONE_COLUMN   = 1;
+	const TWO_COLUMN   = 2;
+	const THREE_COLUMN = 3;
+	const FOUR_COLUMN  = 4;
+	const ONE_THREE    = 5;
+	const THREE_ONE    = 6;
+	const ONE_TWO_ONE  = 7;
+	const ONE_TWO      = 8;
+	const TWO_ONE      = 9;
+
 	/**
 	 * @var object $view
 	 */
@@ -64,7 +74,7 @@ class FrmViewsLayoutHelper {
 
 	public function set_layout_data( $type ) {
 		$layout = FrmViewsLayout::get_layouts_for_view( $this->view->ID, $type );
-		if ( $layout ) {
+		if ( $layout && is_object( $layout ) ) {
 			$this->layout_data = json_decode( $layout->data );
 		}
 	}
@@ -102,7 +112,7 @@ class FrmViewsLayoutHelper {
 		}
 
 		$layout = FrmViewsLayout::get_layouts_for_view( $this->view->ID, $type );
-		if ( ! $layout ) {
+		if ( ! $layout || ! is_object( $layout ) ) {
 			$layout       = new stdClass();
 			$layout->data = '[{"boxes":[{"id":0}],"layout":1}]';
 		}
@@ -328,20 +338,24 @@ class FrmViewsLayoutHelper {
 		}
 
 		switch ( $layout ) {
-			case 1:
-				return 'frm_full';
-			case 2:
-				return 'frm_half';
-			case 3:
-				return 'frm_third';
-			case 4:
-				return 'frm_fourth';
-			case 5:
-				return 0 === $index ? 'frm_fourth' : 'frm_three_fourths';
-			case 6:
-				return 0 === $index ? 'frm_three_fourths' : 'frm_fourth';
-			case 7:
-				return 1 === $index ? 'frm_half' : 'frm_fourth';
+			case self::ONE_COLUMN:
+				return 'frm12';
+			case self::TWO_COLUMN:
+				return 'frm6';
+			case self::THREE_COLUMN:
+				return 'frm4';
+			case self::FOUR_COLUMN:
+				return 'frm3';
+			case self::ONE_THREE:
+				return 0 === $index ? 'frm3' : 'frm9';
+			case self::THREE_ONE:
+				return 0 === $index ? 'frm9' : 'frm3';
+			case self::ONE_TWO_ONE:
+				return 1 === $index ? 'frm6' : 'frm3';
+			case self::ONE_TWO:
+				return 0 === $index ? 'frm4' : 'frm8';
+			case self::TWO_ONE:
+				return 0 === $index ? 'frm8' : 'frm4';
 			default:
 				return '';
 		}

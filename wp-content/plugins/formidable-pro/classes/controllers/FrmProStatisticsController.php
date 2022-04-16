@@ -292,7 +292,7 @@ class FrmProStatisticsController {
 	 *
 	 * @since 2.02.06
 	 * @param object $field
-	 * @param int $stat
+	 * @param int    $value
 	 * @return string
 	 */
 	private static function get_stars( $field, $value ) {

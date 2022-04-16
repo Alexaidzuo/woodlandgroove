@@ -18,8 +18,9 @@ class FrmProAddonsController extends FrmAddonsController {
 			return;
 		}
 
+		$addon = self::get_addon( $plugin );
 		$atts = array(
-			'addon'         => self::get_addon( $plugin ),
+			'addon'         => $addon,
 			'license_type'  => self::get_license_type(),
 			'plan_required' => FrmFormsHelper::get_plan_required( $addon ),
 			'upgrade_link'  => FrmAppHelper::admin_upgrade_link( $upgrade_link_args ),
@@ -118,7 +119,7 @@ class FrmProAddonsController extends FrmAddonsController {
 	 */
 	public static function get_readable_license_type() {
 		$license_type = self::license_type( true );
-		if ( 'personal' === $license_type ) {
+		if ( in_array( $license_type, array( 'personal', 'creator' ), true ) ) {
 			$license_type = 'plus';
 		} elseif ( ! in_array( $license_type, array( 'basic', 'elite', 'business', 'plus' ), true ) ) {
 			$license_type = 'premium';

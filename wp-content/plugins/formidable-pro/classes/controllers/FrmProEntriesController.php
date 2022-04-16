@@ -3243,22 +3243,13 @@ class FrmProEntriesController {
 
 	/**
 	 * @param int $form_id
+	 * @return void
 	 */
 	public static function maybe_include_exclude_fields( $form_id ) {
 		$include_fields = FrmProFormState::get_from_request( 'include_fields', array() );
 		if ( $include_fields ) {
 			global $frm_vars;
 			$frm_vars['show_fields'] = $include_fields;
-		}
-
-		$exclude_fields = FrmProFormState::get_from_request( 'exclude_fields', array() );
-		if ( $exclude_fields ) {
-			FrmProFormsController::set_included_fields(
-				array(
-					'id'             => $form_id,
-					'exclude_fields' => $exclude_fields,
-				)
-			);
 		}
 	}
 

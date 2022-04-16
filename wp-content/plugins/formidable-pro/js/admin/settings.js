@@ -6,7 +6,7 @@
 	}
 
 	function handleChangeEvent( e ) {
-		if ( 'INPUT' === e.target.nodeName && 'checkbox' === e.target.type && -1 !== e.target.parentNode.classList.contains( 'frm_switch_block' ) ) {
+		if ( 'INPUT' === e.target.nodeName && 'checkbox' === e.target.type && e.target.parentNode.classList.contains( 'frm_switch_block' ) ) {
 			handleToggleChangeEvent( e );
 		}
 	}

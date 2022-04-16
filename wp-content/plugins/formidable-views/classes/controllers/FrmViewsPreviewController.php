@@ -179,7 +179,7 @@ class FrmViewsPreviewController {
 	}
 
 	/**
-	 * @param string $data sent from the editor.
+	 * @param array|string $data sent from the editor.
 	 * @return array the processed response
 	 */
 	private function process_entries( $data ) {

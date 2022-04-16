@@ -60,7 +60,7 @@ if ( class_exists( '\Elementor\Widget_Base' ) ) {
 			$view_id  = isset( $settings['view_id'] ) ? absint( $settings['view_id'] ) : 0;
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo FrmProDisplaysController::get_shortcode( array( 'id' => $view_id ) );
+			echo FrmViewsDisplaysController::get_shortcode( array( 'id' => $view_id ) );
 		}
 	}
 }
