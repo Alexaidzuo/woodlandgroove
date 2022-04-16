@@ -1,0 +1,105 @@
+.donate-bar {
+
+    background-color: $gray-dark;
+    color: $white;
+    padding: 5px 0;
+
+
+    &__mess {
+        margin: 25px 20px 0 0;
+        font-size: 22px;
+
+        @include max-mq($md) {
+            margin: 25px 0 10px 0;
+        }
+    }
+
+    &__items {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        @include max-mq($md) {
+            flex-direction: column;
+        }
+    }
+
+    &__amount {
+        font-size: 17px;
+        padding: 7px 25px;
+        border: 1px solid $white;
+        margin-right: 20px;
+        cursor: pointer;
+        transition: $dur $ease;
+        user-select: none;
+
+        &:hover {
+            background-color: $white;
+            color: $gray-dark;
+        }
+
+        @include max-mq($sm) {
+            display: none;
+        }
+    }
+
+    &__form-inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__form-currency {
+        position: relative;
+        position: relative;
+        width: 12px;
+        height: 36px;
+        padding: 0 15px;
+
+        &::after {
+            content: '$';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 15px;
+            display: inline-block;
+            height: 36px;
+            background-color: $gray-light;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 15px;
+        }
+    }
+
+    input[name=amount] {
+        color: $black;
+        width: 65px;
+        margin-right: 20px;
+        padding: 8px 5px 8px 5px;
+        border: 0;
+    }
+
+    input[type=submit] {
+        color: $gray-dark;
+        border: none;
+        padding: 10px 26px 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border: 1px solid transparent;
+        transition: all .4s;
+
+        &:hover {
+            color: $white;
+            background-color: $gray-dark;
+            border: 1px solid $white
+        }
+    }
+
+}

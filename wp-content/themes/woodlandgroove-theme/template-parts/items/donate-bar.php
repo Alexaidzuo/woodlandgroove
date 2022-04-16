@@ -26,25 +26,30 @@ $amounts = get_field('amounts','options');
 
                 <?php endif; ?>
 
-                <form class="donate-bar__form">
-                    <input name="amount" type="number">
-                
-                    <?php
-                    if($amounts)
-                    {
-                        foreach($amounts as $amount)
+                <div class="donate-bar__form-inner">
+
+                    <span class="donate-bar__form-currency"></span>
+
+                    <form class="donate-bar__form">
+                        <input name="amount" type="number">
+
+                        <?php
+                        if($amounts)
                         {
-                            ?>
+                            foreach($amounts as $amount)
+                            {
+                                ?>
 
-                            <span data-amount = "<?php echo $amount['amount'];  ?>" class="donate-bar__amount"><?php echo "$".$amount['amount']; ?></span>
+                                <span data-amount = "<?php echo $amount['amount'];  ?>" class="donate-bar__amount"><?php echo "$".$amount['amount']; ?></span>
 
-                            <?php
+                                <?php
+                            }
                         }
-                    }
-                    ?>
-                    
-                     <input type="submit" value="<?php esc_html_e('Donate','woodlandgroove'); ?>">
-                </form>
+                        ?>
+
+                        <input type="submit" value="<?php esc_html_e('Donate','woodlandgroove'); ?>">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
