@@ -3497,10 +3497,23 @@ h6 {
           transform: rotate(45deg);
 }
 
-.button {
+.btn {
+  display: inline-block;
   font-family: "Quicksand", sans-serif;
   font-size: 14px;
+  font-weight: 300;
   padding: 14px 22px;
+  background-color: #413d3c;
+  color: #ffffff;
+  border-radius: 100px;
+  text-align: center;
+  -webkit-transition: 350ms ease;
+  -o-transition: 350ms ease;
+  transition: 350ms ease;
+}
+
+.btn--light-brown {
+  background-color: #ddad9f;
 }
 
 .nav-links {
@@ -3896,7 +3909,6 @@ h1 {
       -ms-flex-align: center;
           align-items: center;
   padding: 15px;
-  border: 1px solid red;
 }
 
 .itab__item {
@@ -3909,20 +3921,35 @@ h1 {
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
+  height: 100%;
+  -webkit-transition: 350ms ease;
+  -o-transition: 350ms ease;
+  transition: 350ms ease;
+}
+
+.itab__item:hover .btn {
+  background-color: #666666;
 }
 
 .itab__item-image {
   position: relative;
   display: block;
-  width: 100%;
+  width: 300px;
   height: 300px;
   border-radius: 100%;
-  border: 4px solid green;
+  border: 8px solid #458a40;
+  margin: 0 auto;
   overflow: hidden;
 }
 
+@media (max-width: 767px) {
+  .itab__item-image {
+    width: 250px;
+    height: 250px;
+  }
+}
+
 .itab__item-image img {
-  position: absolute;
   display: block;
   width: 300px;
   height: 300px;
@@ -3933,12 +3960,21 @@ h1 {
 .itab__item-title {
   font-family: "Quicksand", sans-serif;
   font-size: 27px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #666666;
 }
 
 .itab__item-subtitle {
   font-family: "Quicksand", sans-serif;
   font-size: 18px;
   font-style: italic;
+  text-align: center;
+  color: #666666;
+}
+
+.itab__item-button {
+  text-align: center;
 }
 
 /*# sourceMappingURL=style.css.map */

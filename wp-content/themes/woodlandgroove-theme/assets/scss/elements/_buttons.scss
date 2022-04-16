@@ -1,5 +1,16 @@
-.button {
+.btn {
+	display: inline-block;
 	font-family: $secondary-font;
 	font-size: 14px;
+	font-weight: 300;
     padding: 14px 22px;
+	background-color: $gray-dark;
+	color: $white;
+	border-radius: 100px;
+	text-align: center;
+	transition: $dur $ease;
+}
+
+.btn--light-brown {
+	background-color: #ddad9f;
 }
