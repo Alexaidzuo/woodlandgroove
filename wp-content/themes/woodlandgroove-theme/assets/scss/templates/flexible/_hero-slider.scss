@@ -1,3 +1,59 @@
-h1 {
-    color: red;
+.hero-slider {
+
+    &__items {
+        position: relative;
+
+        &:hover {
+            .icon-angle-left,
+            .icon-angle-right {
+                opacity: 1;
+            }
+        }
+    }
+
+    &__item {
+        height: 50vh;
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__item-content {
+        max-width: $container-width;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .icon-angle-left {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 50px;
+        color: $white;
+        z-index: 3;
+    }
+
+    .icon-angle-right {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 50px;
+        color: $white;
+        z-index: 3;
+    }
+
+    .icon-angle-left,
+    .icon-angle-right {
+        opacity: 0;
+        transition: $dur $ease;
+
+        &:hover {
+            cursor: pointer;
+            font-size: 60px;
+        }
+    }
 }

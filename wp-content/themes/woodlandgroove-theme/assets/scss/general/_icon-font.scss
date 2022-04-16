@@ -1,7 +1,6 @@
 @font-face {
 	font-family: "font-icons";
-	src: url('../assets/fonts/font-icons/font-icons.woff2') format('woff2'), url('../assets/fonts/font-icons/font-icons.woff') format('woff'), url('../assets/fonts/font-icons/font-icons.ttf') format('truetype');
-	font-display: swap;
+	src: url('../assets/fonts/font-icons/font-icons.woff2') format('woff2'), url('../assets/fonts/font-icons/font-icons.woff') format('woff'), url('../assets/fonts/font-icons/font-icons.ttf') format('truetype');;
 }
 
 @mixin icon-styles {
@@ -14,6 +13,7 @@
 	// speak: none; // only necessary if not using the private unicode range (firstGlyph option)
 	text-decoration: none;
 	text-transform: none;
+    font-display: swap;
 }
 
 %icon {
@@ -34,6 +34,30 @@
 	}
 	@if $filename == angle-up {
 		$char: "\E004";
+	}
+	@if $filename == facebook {
+		$char: "\E005";
+	}
+	@if $filename == google-plus-g {
+		$char: "\E006";
+	}
+	@if $filename == instagram {
+		$char: "\E007";
+	}
+	@if $filename == linkedin {
+		$char: "\E008";
+	}
+	@if $filename == pinterest {
+		$char: "\E009";
+	}
+	@if $filename == search {
+		$char: "\E00A";
+	}
+	@if $filename == twitter {
+		$char: "\E00B";
+	}
+	@if $filename == youtube {
+		$char: "\E00C";
 	}
 
 	@return $char;
@@ -62,4 +86,27 @@
 .icon-angle-up {
 	@include icon(angle-up);
 }
-
+.icon-facebook {
+	@include icon(facebook);
+}
+.icon-google-plus-g {
+	@include icon(google-plus-g);
+}
+.icon-instagram {
+	@include icon(instagram);
+}
+.icon-linkedin {
+	@include icon(linkedin);
+}
+.icon-pinterest {
+	@include icon(pinterest);
+}
+.icon-search {
+	@include icon(search);
+}
+.icon-twitter {
+	@include icon(twitter);
+}
+.icon-youtube {
+	@include icon(youtube);
+}
