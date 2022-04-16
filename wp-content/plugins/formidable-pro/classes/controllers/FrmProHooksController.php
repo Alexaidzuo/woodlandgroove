@@ -163,8 +163,8 @@ class FrmProHooksController {
 
 		add_action( 'wp_head', 'FrmProFormsController::head' );
 		add_action( 'formidable_shortcode_atts', 'FrmProFormsController::formidable_shortcode_atts', 10, 2 );
-		add_action( 'frm_pre_get_form', 'FrmProFormsController::add_submit_conditions_to_frm_vars', 10 );
-		add_filter( 'frm_show_submit_button', 'FrmProFormsController::maybe_hide_submit_button', 10, 2 );
+		add_action( 'frm_pre_get_form', 'FrmProFormsController::pre_get_form', 10 );
+		add_filter( 'frm_submit_button_html', 'FrmProFormsController::maybe_hide_submit_button', 10, 2 );
 		add_filter( 'frm_replace_content_shortcodes', 'FrmProFormsController::replace_content_shortcodes', 10, 3 );
 		add_filter( 'frm_conditional_shortcodes', 'FrmProFormsController::conditional_options' );
 		add_filter( 'frm_helper_shortcodes', 'FrmProFormsController::add_pro_field_helpers', 10, 2 );
@@ -409,8 +409,8 @@ class FrmProHooksController {
 		add_action( 'wp_ajax_frm_get_field_selection', 'FrmProFieldsController::get_field_selection' );
 		add_action( 'wp_ajax_frm_get_field_values', 'FrmProFieldsController::get_field_values' );
 		add_action( 'wp_ajax_frm_get_dynamic_widget_opts', 'FrmProFieldsController::get_dynamic_widget_opts' );
-		add_action( 'wp_ajax_frm_fields_ajax_get_data', 'FrmProFieldsController::ajax_get_data' );
-		add_action( 'wp_ajax_nopriv_frm_fields_ajax_get_data', 'FrmProFieldsController::ajax_get_data' );
+		add_action( 'wp_ajax_frm_fields_ajax_get_data_arr', 'FrmProFieldsController::ajax_get_data_arr' );
+		add_action( 'wp_ajax_nopriv_frm_fields_ajax_get_data_arr', 'FrmProFieldsController::ajax_get_data_arr' );
 		add_action( 'wp_ajax_frm_fields_ajax_data_options', 'FrmProFieldsController::ajax_data_options' );
 		add_action( 'wp_ajax_nopriv_frm_fields_ajax_data_options', 'FrmProFieldsController::ajax_data_options' );
 		add_action( 'wp_ajax_frm_add_logic_row', 'FrmProFieldsController::_logic_row' );

@@ -24,6 +24,7 @@
 	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'woodlandgroove' ); ?></a>
 	<header id="masthead" class="site-header" role="banner">
 		<div class="site-header-inner">
+            <?php get_template_part('template-parts/items/donate-bar'); ?>
 			<div class="container">
 				<div class="row justify-content-between">
 					<div class="justify-content-end social-icons-wrapper">

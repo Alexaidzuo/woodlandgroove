@@ -3,7 +3,8 @@
 $ = require('jquery');
 
 const Navigation = require('./core/navigation');
-const example = require('./site/example');
+const Slick = require('./site/slick');
+const Bar = require('./site/donateBar');
 
 jQuery( function(){
 
@@ -11,10 +12,7 @@ jQuery( function(){
    * Initialize site navigation
    */
   Navigation.init();
-
-  /**
-   * Initialize sample module
-   */
-  example.init();
+  Slick.init();
+  Bar.init();
 
 });

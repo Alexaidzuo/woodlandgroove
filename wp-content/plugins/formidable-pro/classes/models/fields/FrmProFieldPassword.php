@@ -172,10 +172,11 @@ class FrmProFieldPassword extends FrmFieldType {
 
 	/**
 	 * @since 3.03
+	 * @since 5.2.04 This method is public.
 	 *
 	 * @return array
 	 */
-	private function password_checks() {
+	public function password_checks() {
 		$checks = array(
 			'eight-char'   => array(
 				'label'    => __( 'Eight characters minimum', 'formidable-pro' ),
@@ -218,9 +219,10 @@ class FrmProFieldPassword extends FrmFieldType {
 
 	/**
 	 * @since 3.03
+	 * @since 5.2.04 This method is public.
 	 * @return boolean
 	 */
-	private function check_regex( $regex, $password ) {
+	public function check_regex( $regex, $password ) {
 		return preg_match( $regex, $password );
 	}
 }

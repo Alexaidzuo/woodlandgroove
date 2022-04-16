@@ -2463,7 +2463,7 @@ class FrmViewsDisplaysController {
 		FrmProFieldsHelper::replace_non_standard_formidable_shortcodes( array(), $inner_content );
 
 		if ( $is_table_view ) {
-			$headers              = $helper->table_headers( $content_helper->get_content() );
+			$headers              = $helper->table_headers();
 			$table_header_content = $helper->get_table_header_content( $headers );
 			$inner_content        = $table_header_content . '<tbody>' . $inner_content . '</tbody></table>';
 		} elseif ( $is_grid_view ) {
@@ -2578,7 +2578,6 @@ class FrmViewsDisplaysController {
 			default:
 				return 'span 12/span 12';
 		}
-		return '';
 	}
 
 	/**

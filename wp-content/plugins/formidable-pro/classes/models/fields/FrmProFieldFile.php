@@ -321,8 +321,7 @@ class FrmProFieldFile extends FrmFieldType {
 			}
 
 			$img = $this->get_file_display( $id, $atts );
-
-			if ( isset( $img ) ) {
+			if ( $img ) {
 				$img_html[] = $img;
 			}
 		}
@@ -536,7 +535,6 @@ class FrmProFieldFile extends FrmFieldType {
 		}
 
 		$this->entry_id  = FrmAppHelper::get_param( 'id', '', 'post', 'absint' );
-		$entry_id        = $this->entry_id;
 		$was_array       = is_array( $value );
 		$assigned_ids    = array();
 		$unsafe_file_ids = array_filter( array_map( 'absint', (array) $value ) );
@@ -546,8 +544,8 @@ class FrmProFieldFile extends FrmFieldType {
 			return;
 		}
 
-		if ( $entry_id ) {
-			$assigned_ids              = self::get_assigned_file_ids( $unsafe_file_ids );
+		if ( $this->entry_id ) {
+			$assigned_ids              = $this->get_assigned_file_ids( $unsafe_file_ids );
 			$all_ids_have_been_matched = count( $assigned_ids ) === count( $unsafe_file_ids );
 			if ( $all_ids_have_been_matched ) {
 				$this->adjust_value( $value, $assigned_ids, $was_array );
@@ -586,33 +584,41 @@ class FrmProFieldFile extends FrmFieldType {
 	 * @return array
 	 */
 	private function get_assigned_file_ids( $unsafe_file_ids ) {
-		$assigned_ids = array();
-		$conditions   = array( 'or' => 1 );
-		foreach ( $unsafe_file_ids as $file_id ) {
-			$conditions[] = array(
-				'or'              => 1,
-				'meta_value'      => $file_id,
-				'meta_value LIKE' => array( 'i:' . $file_id . ';', ':"' . $file_id . '"' ),
-			);
-		}
-
 		$item_ids   = FrmDb::get_col( 'frm_items', array( 'parent_item_id' => $this->entry_id ) );
 		$item_ids[] = $this->entry_id;
 
-		$where = array(
-			'field_id' => $this->field->id,
-			'item_id'  => $item_ids,
-			$conditions,
+		$metas = FrmProEntryMeta::get_all_metas_for_field(
+			$this->field,
+			array(
+				'entry_ids' => $item_ids,
+				'is_draft'  => 'both',
+			)
 		);
-		$metas = FrmDb::get_col( 'frm_item_metas', $where, 'meta_value' );
 
-		foreach ( $metas as $meta ) {
-			FrmProAppHelper::unserialize_or_decode( $meta );
-			$meta_file_ids = array_map( 'intval', (array) $meta );
-			$assigned_ids  = array_merge( array_intersect( $meta_file_ids, $unsafe_file_ids ), $assigned_ids );
-		}
+		// Flatten meta, convert to integers, with unique values, and only include intersecting "unsafe_file_ids" values.
+		return array_values(
+			array_reduce(
+				$metas,
+				function( $total, $meta ) use ( $unsafe_file_ids ) {
+					if ( is_numeric( $meta ) ) {
+						$meta_file_ids = array( (int) $meta );
+					} elseif ( is_array( $meta ) ) {
+						$meta_file_ids = array_map( 'absint', $meta );
+					} else {
+						return $total;
+					}
 
-		return $assigned_ids;
+					foreach ( $meta_file_ids as $file_id ) {
+						if ( in_array( $file_id, $unsafe_file_ids, true ) ) {
+							$total[ $file_id ] = $file_id;
+						}
+					}
+
+					return $total;
+				},
+				array()
+			)
+		);
 	}
 
 	/**

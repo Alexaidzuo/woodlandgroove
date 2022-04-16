@@ -521,22 +521,41 @@ class FrmProFieldsHelper {
 
 			$new_value = FrmAppHelper::get_param( 'item_meta[' . $shortcode . ']', false, 'post', 'wp_kses_post' );
 			if ( false === $new_value && isset( $atts['default'] ) ) {
-				$new_value = $atts['default'];
-			} elseif ( ! is_array( $new_value ) ) {
-				// escape any shortcodes in the value input to prevent them from processing
-				$new_value = str_replace( '[', '&#91;', $new_value );
+				$new_value     = $atts['default'];
+				$using_default = true;
 			}
 
-			if ( is_array($new_value) && ! $return_array ) {
-				$new_value = implode(', ', $new_value);
+			if ( is_array( $new_value ) && ! $return_array ) {
+				$new_value = self::maybe_get_combo_field_value( $new_value, $shortcode );
 			}
 
-			if ( is_array($new_value) ) {
+			if ( is_array( $new_value ) ) {
 				$value = $new_value;
 			} else {
-				$value = str_replace($val, $new_value, $value);
+				if ( empty( $using_default ) ) {
+					// escape any shortcodes in the value input to prevent them from processing
+					$new_value = str_replace( '[', '&#91;', $new_value );
+				}
+				$value = str_replace( $val, $new_value, $value );
 			}
 		}
+	}
+
+	/**
+	 * Maybe get combo field value from an array value.
+	 *
+	 * @since 5.2.02
+	 *
+	 * @param array $value    The value.
+	 * @param int   $field_id Field ID.
+	 * @return string
+	 */
+	private static function maybe_get_combo_field_value( $value, $field_id ) {
+		$field_obj = FrmFieldFactory::get_field_object( $field_id );
+		if ( $field_obj && 'name' === $field_obj->get_field()->type ) {
+			return $field_obj->get_display_value( $value );
+		}
+		return implode( ', ', $value );
 	}
 
 	/**
@@ -915,6 +934,7 @@ class FrmProFieldsHelper {
 			'in_section'                => 0,
 			'prepend'                   => '',
 			'append'                    => '',
+			'auto_grow'                 => 0,
 		);
 	}
 
@@ -3670,7 +3690,6 @@ class FrmProFieldsHelper {
 	* @since 2.0.8
 	* @param array $field
 	* @param string|int|boolean $opt_key
-	* @param string $html_id
 	*/
 	private static function insert_hidden_other_fields( $field, $opt_key ) {
 		$other_id = FrmFieldsHelper::get_other_field_html_id( $field['original_type'], $field['html_id'], $opt_key );
@@ -3864,7 +3883,7 @@ class FrmProFieldsHelper {
 	 * @codeCoverageIgnore
 	 *
 	 * @param array $field
-	 * @param string $disabled
+	 * @param array $args
 	 */
 	public static function maybe_get_hidden_dynamic_field_inputs( $field, $args ) {
 		_deprecated_function( __FUNCTION__, '3.0', 'FrmFieldType::maybe_include_hidden_values' );

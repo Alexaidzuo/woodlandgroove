@@ -282,6 +282,11 @@ if ( ! empty( $vars ) && is_callable( 'FrmStylesHelper::output_vars' ) ) {
 	-moz-box-sizing:border-box;
 	box-sizing:border-box;
 	display: inline;
+	color: <?php echo esc_html( $defaults['text_color'] ); ?>;
+}
+
+.ui-datepicker-calendar {
+	margin: 0 !important;
 }
 
 <?php if ( $use_default_date ) { ?>
@@ -329,6 +334,22 @@ if ( ! empty( $vars ) && is_callable( 'FrmStylesHelper::output_vars' ) ) {
 .with_frm_style .frm_scale input{
 	display:block;
 	margin:0;
+}
+
+.with_frm_style .frm_scale input[type=radio]:before {
+	content: '';
+	width: 13px;
+	height: 13px;
+	border-radius: 50%;
+	transform: scale(0);
+	transition: 120ms transform ease-in-out;
+	box-shadow: inset 10px 10px var(--text-color);
+	display: block;
+	margin: 2px 0 0 2px;
+}
+
+.with_frm_style .frm_scale input[type=radio]:checked:before {
+	transform: scale(1);
 }
 
 /* Star ratings */

@@ -54,6 +54,7 @@ class FrmProFileField {
 
 			$file_size = self::get_max_file_size( $field['size'] );
 
+			$form_id                                = isset( $field['parent_form_id'] ) ? $field['parent_form_id'] : $field['form_id'];
 			$frm_vars['dropzone_loaded'][ $the_id ] = array(
 				'maxFilesize'      => round( $file_size, 2 ),
 				'maxFiles'         => $max,
@@ -62,7 +63,7 @@ class FrmProFileField {
 				'uploadMultiple'   => $is_multiple,
 				'fieldID'          => $field['id'],
 				'formID'           => $field['form_id'],
-				'parentFormID'     => isset( $field['parent_form_id'] ) ? $field['parent_form_id'] : $field['form_id'],
+				'parentFormID'     => $form_id,
 				'fieldName'        => $atts['field_name'],
 				'mockFiles'        => array(),
 				'defaultMessage'   => __( 'Drop files here to upload', 'formidable-pro' ),
@@ -81,6 +82,10 @@ class FrmProFileField {
 				'resizeWidth'      => null,
 				'timeout'          => self::get_timeout(),
 			);
+
+			if ( array_key_exists( 'honeypot', $frm_vars ) && array_key_exists( $form_id, $frm_vars['honeypot'] ) ) {
+				$frm_vars['dropzone_loaded'][ $the_id ]['checkHoneypot'] = 'strict' === $frm_vars['honeypot'][ $form_id ];
+			}
 
 			$file_types = self::get_allowed_mimes( $field );
 			if ( ! empty( $file_types ) ) {
@@ -937,12 +942,32 @@ class FrmProFileField {
 	 */
 	private static function handle_upload( $file_id, &$response, $sideload = false ) {
 		add_filter( 'wp_insert_attachment_data', 'FrmProFileField::change_attachment_slug', 10, 2 );
+
+		$resize = false;
+		if ( 'frm_submit_dropzone' === FrmAppHelper::get_param( 'action' ) && ! empty( self::$active_upload_field->field_options['resize'] ) ) {
+			add_filter( 'wp_image_maybe_exif_rotate', 'FrmProFileField::disable_exif_rotation' );
+			add_filter( 'wp_image_editors', 'FrmProFileField::force_gd_editor' );
+			$resize = true;
+		}
+
 		$media_id = $sideload ? media_handle_sideload( $file_id, 0 ) : media_handle_upload( $file_id, 0 );
 		remove_filter( 'wp_insert_attachment_data', 'FrmProFileField::change_attachment_slug' );
 
 		if ( is_numeric( $media_id ) ) {
 			$response['media_ids'][] = $media_id;
 			$form_id                 = FrmAppHelper::get_param( 'form_id', '', 'post', 'absint' );
+
+			if ( $resize ) {
+				$file   = get_attached_file( $media_id );
+				$editor = wp_get_image_editor( $file );
+				if ( ! is_wp_error( $editor ) ) {
+					$editor->save( $file );
+				}
+
+				remove_filter( 'wp_image_maybe_exif_rotate', 'FrmProFileField::disable_exif_rotation' );
+				remove_filter( 'wp_image_editors', 'FrmProFileField::force_gd_editor' );
+			}
+
 			self::maybe_set_chmod(
 				array(
 					'file_id'   => $media_id,
@@ -954,6 +979,29 @@ class FrmProFileField {
 		} else {
 			$response['errors'][] = $media_id;
 		}
+	}
+
+	/**
+	 * The wp_image_maybe_exif_rotate logic in WordPress has conflicts with the resize functionality in Dropzone.
+	 * When uploading with dropzone, with resizae is on, disable the exif rotation. The file is saved again after it is inserted.
+	 *
+	 * @since 5.1
+	 *
+	 * @return false
+	 */
+	public static function disable_exif_rotation() {
+		return false;
+	}
+
+	/**
+	 * On sites with ImageMagick installed the image still gets flipped, so force GD.
+	 *
+	 * @since 5.1
+	 *
+	 * @return array
+	 */
+	public static function force_gd_editor() {
+		return array( 'WP_Image_Editor_GD' );
 	}
 
 	/**
@@ -988,8 +1036,8 @@ class FrmProFileField {
 	* Get the final media IDs
 	*
 	* @since 2.0
-	* @param array|string $media_ids
-	* @return array $mids
+	* @param array  $response
+	* @return array media ids.
 	*/
 	private static function sort_errors_from_ids( &$response ) {
 		$mids = array();
@@ -1663,6 +1711,8 @@ class FrmProFileField {
 
 	/**
 	 * Check REQUEST_URI for protected file download details
+	 *
+	 * @return void
 	 */
 	public static function check_for_download() {
 		$payload = self::get_file_payload();
@@ -1677,45 +1727,55 @@ class FrmProFileField {
 			return;
 		}
 
-		if ( 200 === $download['code'] ) {
-			self::chmod( $download['path'], 0400 );
-
-			$mime_type   = FrmProAppHelper::get_mime_type( $download['path'] );
-			$disposition = self::get_disposition( $mime_type );
-
-			header( FrmAppHelper::get_server_value('SERVER_PROTOCOL') . ' 200 OK');
-			header( 'Cache-Control: public' ); // needed for internet explorer
-			header( 'Content-Type: ' . $mime_type );
-			header( 'Content-Transfer-Encoding: Binary' );
-			header( 'Content-Length:' . filesize( $download['path'] ) );
-			header( 'Content-Disposition: ' . esc_attr( $disposition ) . '; filename=' . esc_attr( $download['name'] ) );
-
-			if ( ! empty( $download['is_temporary'] ) || self::noindex_setting_is_on_for_file( $download['form_id'] ) ) {
-				header( 'X-Robots-Tag: noindex' );
-			}
-
-			@readfile( $download['path'] ); // hide any errors to prevent issues with downloading an error message as a file
-
-			self::chmod( $download['path'], 0200 );
-			die();
-		} else {
-			status_header( $download['code'] );
-
-			if ( 404 === $download['code'] ) {
-				$title = __( 'Oops! That file no longer exists', 'formidable-pro' );
-			} else {
-				$title = __( 'Oops! That file is protected', 'formidable-pro' );
-			}
-			?>
-				<div style="text-align: center;">
-					<h1><?php echo esc_html( $title ); ?></h1>
-					<?php if ( is_user_logged_in() ) { ?>
-						<p><?php echo esc_html( $download['message'] ); ?></p>
-					<?php } ?>
-				</div>
-			<?php
-			wp_die();
+		if ( 200 !== $download['code'] ) {
+			self::handle_download_error( $download );
+			return;
 		}
+
+		self::chmod( $download['path'], 0400 );
+
+		$mime_type   = FrmProAppHelper::get_mime_type( $download['path'] );
+		$disposition = self::get_disposition( $mime_type );
+
+		header( FrmAppHelper::get_server_value('SERVER_PROTOCOL') . ' 200 OK');
+		header( 'Cache-Control: public' ); // needed for internet explorer
+		header( 'Content-Type: ' . $mime_type );
+		header( 'Content-Transfer-Encoding: Binary' );
+		header( 'Content-Length:' . filesize( $download['path'] ) );
+		header( 'Content-Disposition: ' . esc_attr( $disposition ) . '; filename=' . esc_attr( $download['name'] ) );
+
+		if ( ! empty( $download['is_temporary'] ) || self::noindex_setting_is_on_for_file( $download['form_id'] ) ) {
+			header( 'X-Robots-Tag: noindex' );
+		}
+
+		@readfile( $download['path'] ); // hide any errors to prevent issues with downloading an error message as a file
+
+		self::chmod( $download['path'], 0200 );
+		die();
+	}
+
+	/**
+	 * @since 5.2.02
+	 *
+	 * @param array $download
+	 * @return void
+	 */
+	private static function handle_download_error( $download ) {
+		status_header( $download['code'] );
+
+		if ( 404 === $download['code'] ) {
+			$message = __( 'Oops! That file no longer exists', 'formidable-pro' );
+		} else {
+			$message = __( 'Oops! That file is protected', 'formidable-pro' );
+		}
+
+		$title = is_user_logged_in() ? $download['message'] : '';
+
+		wp_die(
+			'<h1>' . esc_html( $message ) . '</h1>',
+			'<p>' . esc_html( $title ) . '</p>',
+			absint( $download['code'] )
+		);
 	}
 
 	/**
@@ -1887,7 +1947,7 @@ class FrmProFileField {
 	/**
 	 * Check if the current user has permission to access a specific form
 	 *
-	 * @param int $id
+	 * @param int $form_id
 	 * @return bool
 	 */
 	private static function folder_is_protected( $form_id ) {

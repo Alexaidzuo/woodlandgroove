@@ -1,0 +1,52 @@
+.donate-bar{
+
+    background-color: $gray-dark;
+    color:$white;
+    padding:  5px 0;
+   
+
+    &__mess{
+
+        margin: 25px 20px 0 0;
+        font-size: 22px;
+    }
+
+    &__items{
+
+        display: flex;
+        align-items: center;
+    }
+
+    &__amount{
+        font-size: 17px;
+        padding: 7px 25px;
+        border: 1px solid $white;
+        margin-right: 20px;
+        cursor: pointer;
+          
+    }
+
+    input[name=amount]{
+        color:$black;
+        width:65px; 
+        margin-right: 20px;
+        padding: 8px 5px 8px 5px;
+    }
+
+    input[type=submit]{
+        color: $gray-dark;
+        border: none;
+        padding: 10px 26px 10px ;
+        font-weight: 700;
+        text-transform: uppercase;
+        transition: all .4s;
+
+        &:hover{
+            color:$white;
+            background-color:$gray-dark;
+            border:1px solid $white
+
+        }
+    }
+
+}

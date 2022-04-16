@@ -12,6 +12,8 @@ function custom_scripts_and_styles() {
 	}            
 
 	wp_localize_script( 'main', 'theme', $theme_options );
+
+    
 	
 }
 add_action('wp_enqueue_scripts', 'custom_scripts_and_styles');

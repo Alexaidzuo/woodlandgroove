@@ -165,7 +165,7 @@ class FrmProAppController {
 			$files['dropzone'] = array(
 				'file'     => '/js/dropzone.min.js',
 				'requires' => array( 'jquery' ),
-				'version'  => '5.5.0',
+				'version'  => '5.9.3',
 			);
 		}
 		if ( $include_maskedinput ) {
@@ -518,6 +518,7 @@ class FrmProAppController {
 		$action = FrmAppHelper::get_param( 'frm_action' );
 		if ( in_array( $action, array( 'edit', 'duplicate' ), true ) ) {
 			self::register_and_enqueue_admin_script( 'builder' );
+			self::register_and_enqueue_style( 'builder' );
 		} elseif ( 'settings' === $action ) {
 			self::register_and_enqueue_admin_script( 'settings' );
 		}
@@ -526,12 +527,24 @@ class FrmProAppController {
 	/**
 	 * Add a script from the /js/admin folder for specific admin pages.
 	 *
+	 * @param string $script
+	 * @param array  $dependencies
 	 * @return void
 	 */
 	private static function register_and_enqueue_admin_script( $script, $dependencies = array( 'formidable_admin' ) ) {
 		$version = FrmProDb::$plug_version;
 		wp_register_script( 'formidable_pro_' . $script, FrmProAppHelper::plugin_url() . '/js/admin/' . $script . '.js', $dependencies, $version, true );
 		wp_enqueue_script( 'formidable_pro_' . $script );
+	}
+
+	/**
+	 * @param string $style
+	 * @return void
+	 */
+	private static function register_and_enqueue_style( $style ) {
+		$version = FrmProDb::$plug_version;
+		wp_register_style( 'formidable-pro-' . $style, FrmProAppHelper::plugin_url() . '/css/' . $style . '.css', array(), $version );
+		wp_enqueue_style( 'formidable-pro-' . $style );
 	}
 
 	public static function deprecating_nested_views_notice() {

@@ -14,77 +14,22 @@ class FrmProFieldsController {
 	public static function &change_type( $type, $field ) {
 		global $frm_vars;
 
-		remove_filter('frm_field_type', 'FrmFieldsController::change_type');
+		remove_filter( 'frm_field_type', 'FrmFieldsController::change_type' );
 
 		// Don't change user ID fields or repeating sections to hidden
-		if ( ! ( $type === 'divider' && FrmField::is_option_true( $field, 'repeat' ) ) && $type !== 'user_id' && self::field_is_hidden_by_shortcode( $field ) ) {
+		if ( ! ( $type === 'divider' && FrmField::is_option_true( $field, 'repeat' ) ) && $type !== 'user_id' && ! FrmProGlobalVarsHelper::get_instance()->field_is_visible( $field ) ) {
 			$type = 'hidden';
 		}
 
-		if ( $type == '10radio' ) {
+		if ( $type === '10radio' ) {
 			$type = 'scale';
 		}
 
-		if ( ! FrmAppHelper::is_admin() && $type != 'hidden' && $type != 'divider' ) {
-			if ( ! FrmProFieldsHelper::is_field_visible_to_user( $field ) ) {
-				$type = 'hidden';
-			}
+		if ( ! FrmAppHelper::is_admin() && $type !== 'hidden' && $type !== 'divider' && ! FrmProFieldsHelper::is_field_visible_to_user( $field ) ) {
+			$type = 'hidden';
 		}
 
 		return $type;
-	}
-
-	/**
-	 * Check if a field or its section is hidden by a fields or exclude_fields shortcode option.
-	 *
-	 * @since 5.0.15
-	 *
-	 * @param stdClass $field
-	 * @return bool
-	 */
-	private static function field_is_hidden_by_shortcode( $field ) {
-		global $frm_vars;
-		if ( empty( $frm_vars['show_fields'] ) ) {
-			return false;
-		}
-
-		list( $include_id, $include_key ) = FrmProAppHelper::pull_ids_and_keys( $frm_vars['show_fields'] );
-
-		if ( in_array( (int) $field->id, $include_id, true ) || in_array( $field->field_key, $include_key, true ) ) {
-			if ( 'form' === $field->type && ! empty( $field->field_options['form_select'] ) ) {
-				if ( ! isset( self::$visible_embedded_form_ids ) ) {
-					self::$visible_embedded_form_ids = array();
-				}
-				self::$visible_embedded_form_ids[] = (int) $field->field_options['form_select'];
-			}
-			return false;
-		}
-
-		if ( 'form' === $field->type ) {
-			// Do not hide an embedded form that isn't included so included child fields are still visible.
-			return false;
-		}
-
-		if ( ! empty( self::$visible_embedded_form_ids ) && in_array( (int) $field->form_id, self::$visible_embedded_form_ids, true ) && ! FrmProFormState::get_from_request( 'exclude_fields', false ) ) {
-			return false;
-		}
-
-		if ( empty( $field->field_options['in_section'] ) ) {
-			return true;
-		}
-
-		$section_id = (int) $field->field_options['in_section'];
-		if ( in_array( $section_id, $include_id, true ) ) {
-			return false;
-		}
-
-		if ( ! $include_key ) {
-			// avoid getting the section key if none of the included values are keys.
-			return true;
-		}
-
-		$section_key = FrmField::get_key_by_id( $section_id );
-		return ! in_array( $section_key, $include_key, true );
 	}
 
 	public static function use_field_key_value( $opt, $opt_key, $field ) {
@@ -459,6 +404,10 @@ class FrmProFieldsController {
 
 		if ( $field['type'] === 'divider' && ! empty( $field['repeat'] ) ) {
 			include( FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/repeat-options.php' );
+		}
+
+		if ( 'textarea' === $field['type'] ) {
+			include( FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/auto-grow.php' );
 		}
 
 		if ( isset( $display['visibility'] ) && $display['visibility'] ) {
@@ -854,39 +803,142 @@ class FrmProFieldsController {
 		return $required;
 	}
 
+	/**
+	 * @since 5.2.04
+	 */
+	public static function ajax_get_data_arr() {
+		$post_data = FrmAppHelper::get_param( 'postData' );
+		$response  = array();
+
+		foreach ( $post_data as $data ) {
+			if ( ! isset( $data['entry_id'] ) || ! isset( $data['current_field'] ) || ! isset( $data['hide_id'] ) ) {
+				continue;
+			}
+
+			$result_str = '';
+
+			$entry_id        = intval( $data['entry_id'] );
+			$current_field   = intval( $data['current_field'] );
+			$hidden_field_id = sanitize_text_field( wp_unslash( $data['hide_id'] ) );
+
+			$current    = FrmField::getOne( $current_field );
+			$data_field = FrmField::getOne( $current->field_options['form_select'] );
+
+			$meta_value = self::get_meta_value_for_ajax_handler( $entry_id, $data_field );
+
+			if ( $meta_value === null ) {
+				$response[] = $result_str;
+				continue;
+			}
+
+			$data_display_opts = apply_filters( 'frm_display_data_opts', array( 'html' => true, 'wpautop' => false ) );
+
+			$value = FrmFieldsHelper::get_display_value( $meta_value, $data_field, $data_display_opts );
+			if ( is_array( $value ) ) {
+				$value = implode( ', ', $value );
+			}
+
+			if ( is_array( $meta_value ) ) {
+				$meta_value = implode( ', ', $meta_value );
+			}
+
+			$current_field = (array) $current;
+			foreach ( $current->field_options as $o => $v ) {
+				if ( ! isset( $current_field[ $o ] ) ) {
+					$current_field[ $o ] = $v;
+				}
+				unset($o, $v);
+			}
+
+			// Set up HTML ID and HTML name
+			$html_id = '';
+			$field_name = 'item_meta';
+			FrmProFieldsHelper::get_html_id_from_container($field_name, $html_id, (array) $current, $hidden_field_id);
+
+			$on_current_page = $data['on_current_page'];
+			$on_current_page = ( 'true' === $on_current_page );
+
+			if ( $on_current_page && FrmProFieldsHelper::is_field_visible_to_user( $current ) ) {
+				if ( FrmAppHelper::is_not_empty_value( $value ) && $value !== false ) {
+					$result_str .= apply_filters(
+						'frm_show_it',
+						'<p class="frm_show_it">' . $value . "</p>\n",
+						$value,
+						array(
+							'field'    => $data_field,
+							'value'    => $meta_value,
+							'entry_id' => $entry_id,
+						)
+					);
+				}
+				$result_str .= '<input type="hidden" id="' . esc_attr( $html_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $value ) . '" ' . do_action( 'frm_field_input_html', $current_field, false ) . '/>';
+			} else {
+				$result_str .= esc_attr( $value );
+			}
+
+			$response[] = $result_str;
+
+		}
+
+		wp_send_json( $response );
+	}
+
+	/**
+	 * @deprecated 5.2.03
+	 */
 	public static function ajax_get_data() {
+		_deprecated_function( __METHOD__, '5.2.03' );
 		//check_ajax_referer( 'frm_ajax', 'nonce' );
 
 		$entry_id = self::get_posted_entry_ids();
 		$current_field = FrmAppHelper::get_param( 'current_field', '', 'get', 'absint' );
 		$hidden_field_id = FrmAppHelper::get_param( 'hide_id', '', 'get', 'sanitize_text_field' );
 
-		$current = FrmField::getOne($current_field);
-		$data_field = FrmField::getOne( $current->field_options['form_select'] );
+		self::get_data_for_ajax_handler( $entry_id, $current_field, $hidden_field_id );
+
+		wp_die();
+	}
+
+	/**
+	 * @since 5.2.04
+	 */
+	private static function get_meta_value_for_ajax_handler( $entry_id, $data_field ) {
 		if ( strpos( $entry_id, ',' ) ) {
-			$entry_id = explode(',', $entry_id);
+			$entry_id   = explode(',', $entry_id);
 			$meta_value = array();
 			foreach ( $entry_id as $eid ) {
-				$new_meta = FrmProEntryMetaHelper::get_post_or_meta_value($eid, $data_field);
+				$new_meta = FrmProEntryMetaHelper::get_post_or_meta_value( $eid, $data_field );
 				if ( $new_meta ) {
 					foreach ( (array) $new_meta as $nm ) {
-						array_push($meta_value, $nm);
-						unset($nm);
+						array_push( $meta_value, $nm );
+						unset( $nm );
 					}
 				}
-				unset($new_meta, $eid);
+				unset( $new_meta, $eid );
 			}
 			$meta_value = array_unique( $meta_value );
 		} else {
-			$meta_value = FrmProEntryMetaHelper::get_post_or_meta_value($entry_id, $data_field);
+			$meta_value = FrmProEntryMetaHelper::get_post_or_meta_value( $entry_id, $data_field );
 		}
 
-		if ( $meta_value === null ) {
+		return $meta_value;
+	}
+
+	/**
+	 * @since 5.2.04
+	 */
+	private static function get_data_for_ajax_handler( $entry_id, $current_field, $hidden_field_id ) {
+		$current    = FrmField::getOne( $current_field );
+		$data_field = FrmField::getOne( $current->field_options['form_select'] );
+
+		$meta_value = self::get_meta_value_for_ajax_handler( $entry_id, $data_field );
+
+		if ( null === $meta_value ) {
 			wp_die();
 		}
 
 		$data_display_opts = apply_filters( 'frm_display_data_opts', array( 'html' => true, 'wpautop' => false ) );
-		$value = FrmFieldsHelper::get_display_value( $meta_value, $data_field, $data_display_opts );
+		$value             = FrmFieldsHelper::get_display_value( $meta_value, $data_field, $data_display_opts );
 		if ( is_array( $value ) ) {
 			$value = implode( ', ', $value );
 		}
@@ -900,13 +952,13 @@ class FrmProFieldsController {
 			if ( ! isset( $current_field[ $o ] ) ) {
 				$current_field[ $o ] = $v;
 			}
-			unset($o, $v);
+			unset( $o, $v );
 		}
 
 		// Set up HTML ID and HTML name
-		$html_id = '';
+		$html_id    = '';
 		$field_name = 'item_meta';
-		FrmProFieldsHelper::get_html_id_from_container($field_name, $html_id, (array) $current, $hidden_field_id);
+		FrmProFieldsHelper::get_html_id_from_container( $field_name, $html_id, (array) $current, $hidden_field_id );
 
 		$on_current_page = FrmAppHelper::get_param( 'on_current_page', 'true', 'get', 'sanitize_text_field' );
 		$on_current_page = ( $on_current_page == 'true' );
@@ -919,8 +971,6 @@ class FrmProFieldsController {
 		} else {
 			echo esc_attr( $value );
 		}
-
-		wp_die();
 	}
 
 	/**
