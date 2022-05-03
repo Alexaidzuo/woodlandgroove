@@ -70,7 +70,7 @@
 					</a>
 				</div> -->
 
-				<a class="btn btn--cta-donate" href="<?php echo "/donate" ?>">Donation</a>
+				<a class="btn btn--cta-donate" href="<?php echo get_site_url()."/donate" ?>">Donation</a>
 
 			</div> <!-- /.row justify-content-between -->
 		</div> <!-- /.container logo-menu-wrapper -->

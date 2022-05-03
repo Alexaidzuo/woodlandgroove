@@ -22,8 +22,6 @@ $simple_contents = get_sub_field('simple_contents');
 
         <?php
         $link = $contents['cta_link_button'];
-        $link_url = $link['url'];
-        $link_title = $link['title'];
         $cta_button = get_sub_field('cta_button'); //boolean
         ?>
 
@@ -36,9 +34,9 @@ $simple_contents = get_sub_field('simple_contents');
                 ?>
 
                 <?php
-                if($link_url && $link_title) : ?>
+                if($link) : ?>
                     <div class="simple-content__cta">
-                        <a class="btn btn--cta-donate" href="<?php echo $link_url;?>"><?php echo $link_title; ?></a>
+                        <a class="btn btn--cta-donate" href="<?php echo $link['url'];?>"><?php echo $link['title']; ?></a>
                     </div>
                 <?php endif; ?>
             </div>

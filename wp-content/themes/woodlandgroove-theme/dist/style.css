@@ -4265,4 +4265,80 @@ fieldset {
   text-align: center;
 }
 
+.donate-form .frm_form_field.frm_left_container .frm_primary_label {
+  font-weight: 700;
+}
+
+.donate-form .frm_style_formidable-style.with_frm_style .frm_submit button {
+  display: inline-block;
+  font-family: "Quicksand", sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  padding: 14px 22px;
+  background-color: #ddad9f;
+  color: #ffffff;
+  border-radius: 100px;
+  text-align: center;
+  -webkit-transition: 350ms ease;
+  -o-transition: 350ms ease;
+  transition: 350ms ease;
+  border: none;
+}
+
+.donate-form .frm_style_formidable-style.with_frm_style .frm_submit button:hover {
+  background-color: #413d3c;
+}
+
+.donate-form input {
+  padding: 20px 10px !important;
+}
+
+.donate-form select {
+  height: 40px;
+}
+
+.donate-form .frm_style_formidable-style.with_frm_style .form-field input:not([type=file]):focus,
+.donate-form .frm_style_formidable-style.with_frm_style select:focus {
+  border-color: #ddad9f;
+}
+
+.donate-form #frm_field_19_container {
+  position: relative !important;
+}
+
+.donate-form #frm_field_19_container input[type=number] {
+  padding: 20px 0 20px 45px !important;
+}
+
+.donate-form #frm_field_19_container:after {
+  content: "$";
+  font-size: 20px;
+  z-index: 5;
+  width: 40px;
+  height: 42px;
+  background-color: rgba(204, 204, 204, 0.447);
+  position: absolute;
+  left: 150px;
+  top: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .donate-form #frm_field_19_container:after {
+    top: 30px;
+    left: 0;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */
