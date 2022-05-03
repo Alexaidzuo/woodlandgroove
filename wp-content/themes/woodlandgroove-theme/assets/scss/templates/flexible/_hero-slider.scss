@@ -15,6 +15,7 @@
         height: 50vh;
         background-repeat: no-repeat;
         background-size: cover;
+        background-position: center;
         display: flex !important;
         justify-content: center;
         align-items: center;
@@ -24,6 +25,7 @@
         max-width: $container-width;
         margin: 0 auto;
         text-align: center;
+        color: $white;
     }
 
     .icon-angle-left {

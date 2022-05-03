@@ -4037,6 +4037,7 @@ fieldset {
   height: 50vh;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   display: -webkit-box !important;
   display: -webkit-flex !important;
   display: -ms-flexbox !important;
@@ -4055,6 +4056,7 @@ fieldset {
   max-width: 1170px;
   margin: 0 auto;
   text-align: center;
+  color: #ffffff;
 }
 
 .hero-slider .icon-angle-left {
