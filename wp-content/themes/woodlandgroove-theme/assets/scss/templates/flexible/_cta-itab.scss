@@ -79,7 +79,7 @@
     &__item-title {
         font-family: $secondary-font;
         font-size: 27px;
-        margin-bottom: 10px;
+        margin: 0 0 2px;
         text-align: center;
         color: $gray-light;
     }
@@ -90,10 +90,12 @@
         font-style: italic;
         text-align: center;
         color: $gray-light;
+        margin: 8px 0 0 !important;
     }
 
     &__item-button {
         text-align: center;
+        margin: 15px 0 0;
     }
 
 }

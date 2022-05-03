@@ -12,5 +12,19 @@
 }
 
 .btn--light-brown {
-	background-color: #ddad9f;
+	background-color: $light-brown;
+	transition: $dur $ease;
+
+	&:hover {
+		background-color: $gray-light;
+	}
+}
+
+.btn--cta-donate {
+	background-color: $light-brown;
+	transition: $dur $ease;
+
+	&:hover {
+		background-color: $gray-light;
+	}
 }
