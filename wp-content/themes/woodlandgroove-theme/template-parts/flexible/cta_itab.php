@@ -24,6 +24,52 @@ if ($active == 1) : ?>
             ?>
 
             <div class="itab__item-inner col-lg-4 col-md-6">
+
+                <?php if ($button) : ?>
+                    <div class="itab__item-button">
+                        <a href="<?php echo $button['url']; ?>" target="<?php echo $button['target']; ?>">
+                        <div class="itab__item">
+                            <?php if ($image) { ?>
+                                <div class="itab__item-image">
+                                    <img src="<?php echo $image['url']; ?>" alt="<?php echo $image['alt']; ?>" />
+                                </div>
+                            <?php } ?>
+
+                            <?php
+                            if($title || $subtitle) : ?>
+
+                                <div class="itab__item-head">
+
+                                    <?php
+                                    if ($title) : ?>
+
+                                        <?php
+                                        if($button) : ?>
+
+                                        <a href="<?php echo $button['url']; ?>"><h3 class="itab__item-title"><?php echo $title; ?></h3></a>
+
+                                        <?php else : ?>
+
+                                            <h3 class="itab__item-title"><?php echo $title; ?></h3>
+
+                                        <?php endif; ?>
+
+                                    <?php endif; ?>
+
+                                    <?php
+                                    if ($subtitle) : ?>
+                                        <p class="itab__item-subtitle"><?php echo $subtitle; ?></p>
+                                    <?php endif; ?>
+
+                                </div>
+                            <?php endif; ?>
+
+                        </div>
+                        </a>
+                    </div>
+
+                <?php else : ?>
+
                 <div class="itab__item">
                     <?php if ($image) { ?>
                         <div class="itab__item-image">
@@ -60,12 +106,10 @@ if ($active == 1) : ?>
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($button) : ?>
-                        <div class="itab__item-button">
-                            <a class="btn btn--light-brown" href="<?php echo $button['url']; ?>" target="<?php echo $button['target']; ?>"><?php echo $button['title']; ?></a>
-                        </div>
-                    <?php endif; ?>
                 </div>
+
+                <?php endif; ?>
+
             </div>
 
         <?php endwhile; ?>

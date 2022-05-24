@@ -73,6 +73,11 @@
                 background-color: rgba($black, 0.5);
                 z-index: 3;
             }
+
+            @include max-mq($sm) {
+                width: 250px;
+                height: 250px;
+            }
         }
     }
 

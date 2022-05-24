@@ -23,7 +23,9 @@ $form = get_sub_field('shortcode');
 
             <?php if($mess): ?>
 
-            <p class="donate-form__mess"><?php echo $mess; ?></p>
+            <div class="donate-form__mess">
+                <?php echo $mess; ?>
+            </div>
 
             <?php endif; ?>
 

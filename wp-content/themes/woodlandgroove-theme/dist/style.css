@@ -4229,6 +4229,13 @@ fieldset {
   z-index: 3;
 }
 
+@media (max-width: 767px) {
+  .itab__item-image img {
+    width: 250px;
+    height: 250px;
+  }
+}
+
 .itab__item-title {
   font-family: "Quicksand", sans-serif;
   font-size: 27px;
@@ -4253,6 +4260,8 @@ fieldset {
 
 .simple-content__item {
   padding: 30px 0;
+  font-size: 18px;
+  line-height: 26px;
   border-bottom: 1px solid #ddad9f;
 }
 
@@ -4260,9 +4269,20 @@ fieldset {
   border: none;
 }
 
+.simple-content h2 {
+  line-height: initial;
+}
+
 .simple-content__cta {
   width: 100%;
   text-align: center;
+}
+
+.donate-form__mess {
+  width: 100%;
+  padding: 30px 0;
+  font-size: 18px;
+  line-height: 32px;
 }
 
 .donate-form .frm_form_field.frm_left_container .frm_primary_label {

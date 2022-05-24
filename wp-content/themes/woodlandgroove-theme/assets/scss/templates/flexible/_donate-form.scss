@@ -1,15 +1,17 @@
-.donate-form{
+.donate-form {
 
-    .frm_style_formidable-style.with_frm_style .frm_form_field.frm_left_container{
-
-        //grid-template-columns: 200px auto;
+    &__mess {
+        width: 100%;
+        padding: 30px 0;
+        font-size: 18px;
+        line-height: 32px;
     }
 
-    .frm_form_field.frm_left_container .frm_primary_label{
+    .frm_form_field.frm_left_container .frm_primary_label {
         font-weight: 700;
     }
 
-    .frm_style_formidable-style.with_frm_style .frm_submit button{
+    .frm_style_formidable-style.with_frm_style .frm_submit button {
 
         display: inline-block;
         font-family: "Quicksand", sans-serif;
@@ -21,10 +23,10 @@
         border-radius: 100px;
         text-align: center;
         transition: 350ms ease;
-        border:none;
+        border: none;
     }
 
-    .frm_style_formidable-style.with_frm_style .frm_submit button:hover{
+    .frm_style_formidable-style.with_frm_style .frm_submit button:hover {
 
         background-color: $gray-dark;
     }
@@ -32,7 +34,7 @@
 
     input {
 
-        padding: 20px 10px!important;
+        padding: 20px 10px !important;
     }
 
     select {
@@ -41,23 +43,24 @@
     }
 
     .frm_style_formidable-style.with_frm_style .form-field input:not([type=file]):focus,
-    .frm_style_formidable-style.with_frm_style select:focus{
+    .frm_style_formidable-style.with_frm_style select:focus {
 
-        border-color:$light-brown;
+        border-color: $light-brown;
     }
 
-    #frm_field_19_container{
+    #frm_field_19_container {
 
-        position: relative!important;
-        input[type=number]{
+        position: relative !important;
 
-            padding: 20px 0 20px 45px!important;
+        input[type=number] {
+
+            padding: 20px 0 20px 45px !important;
         }
     }
 
-    #frm_field_19_container:after{
+    #frm_field_19_container:after {
 
-        content:"$";
+        content: "$";
         font-size: 20px;
         z-index: 5;
         width: 40px;
@@ -65,14 +68,14 @@
         background-color: rgba(204, 204, 204, 0.447);
         position: absolute;
         left: 150px;
-        top:0;
-        display:flex;
+        top: 0;
+        display: flex;
         align-items: center;
         justify-content: center;
 
         @include max-mq(600px) {
-            top:30px;
-            left:0;
+            top: 30px;
+            left: 0;
         }
     }
 }
