@@ -70,7 +70,11 @@
 					</a>
 				</div> -->
 
-				<a class="btn btn--cta-donate" href="<?php echo get_site_url()."/donate" ?>">Donation</a>
+				<div class="nav-right">
+					<img class="right-logo" src="<?php echo get_template_directory_uri().'/assets/images/grow.webp'; ?>" alt="Help us Grow">
+
+					<a class="btn btn--cta-donate" href="<?php echo get_site_url()."/donate" ?>">Donate</a>
+				</div>
 
 			</div> <!-- /.row justify-content-between -->
 		</div> <!-- /.container logo-menu-wrapper -->

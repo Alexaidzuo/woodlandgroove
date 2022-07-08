@@ -31,7 +31,7 @@ $image = get_sub_field('image');
                     foreach ($slider as $slide) {
                     ?>
 
-                        <div class="hero-slider__item" <?php if ($slide['image']) echo "style='background-image:url(" . wp_get_attachment_image_url($slide['image'], 'large') . ")'" ?>>
+                        <div class="hero-slider__item" <?php if ($slide['image']) echo "style='background-image:url(" . wp_get_attachment_image_url($slide['image'], '2048x2048') . ")'" ?>>
                             <div class="hero-slider__item-content">
 
                                 <?php if ($slide['title']) : ?>
