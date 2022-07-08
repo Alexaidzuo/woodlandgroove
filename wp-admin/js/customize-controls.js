@@ -7680,7 +7680,7 @@
 								/*
 								 * Note that the setting revision will be undefined in the case of setting
 								 * values that are marked as dirty when the customizer is loaded, such as
-								 * when applying woodlandgroove content. All other dirty settings will have an
+								 * when applying starter content. All other dirty settings will have an
 								 * associated revision due to their modification triggering a change event.
 								 */
 								if ( setting._dirty && ( _.isUndefined( api._latestSettingRevisions[ setting.id ] ) || api._latestSettingRevisions[ setting.id ] <= latestRevision ) ) {
@@ -8016,7 +8016,7 @@
 			selectedChangesetStatus( '' === api.settings.changeset.status || 'auto-draft' === api.settings.changeset.status ? defaultSelectedChangesetStatus : api.settings.changeset.status );
 			selectedChangesetStatus.link( changesetStatus ); // Ensure that direct updates to status on server via wp.customizer.previewer.save() will update selection.
 			saved( true );
-			if ( '' === changesetStatus() ) { // Handle case for loading woodlandgroove content.
+			if ( '' === changesetStatus() ) { // Handle case for loading starter content.
 				api.each( function( setting ) {
 					if ( setting._dirty ) {
 						saved( false );

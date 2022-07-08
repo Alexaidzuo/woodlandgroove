@@ -52,6 +52,7 @@ class WP_oEmbed {
 		$providers = array(
 			'#https?://((m|www)\.)?youtube\.com/watch.*#i' => array( 'https://www.youtube.com/oembed', true ),
 			'#https?://((m|www)\.)?youtube\.com/playlist.*#i' => array( 'https://www.youtube.com/oembed', true ),
+			'#https?://((m|www)\.)?youtube\.com/shorts/*#i' => array( 'https://www.youtube.com/oembed', true ),
 			'#https?://youtu\.be/.*#i'                     => array( 'https://www.youtube.com/oembed', true ),
 			'#https?://(.+\.)?vimeo\.com/.*#i'             => array( 'https://vimeo.com/api/oembed.{format}', true ),
 			'#https?://(www\.)?dailymotion\.com/.*#i'      => array( 'https://www.dailymotion.com/services/oembed', true ),
@@ -80,8 +81,8 @@ class WP_oEmbed {
 			'#https?://(www\.|embed\.)?ted\.com/talks/.*#i' => array( 'https://www.ted.com/services/v1/oembed.{format}', true ),
 			'#https?://(www\.)?(animoto|video214)\.com/play/.*#i' => array( 'https://animoto.com/oembeds/create', true ),
 			'#https?://(.+)\.tumblr\.com/post/.*#i'        => array( 'https://www.tumblr.com/oembed/1.0', true ),
-			'#https?://(www\.)?kickwoodlandgroove\.com/projects/.*#i' => array( 'https://www.kickwoodlandgroove.com/services/oembed', true ),
-			'#https?://kck\.st/.*#i'                       => array( 'https://www.kickwoodlandgroove.com/services/oembed', true ),
+			'#https?://(www\.)?kickstarter\.com/projects/.*#i' => array( 'https://www.kickstarter.com/services/oembed', true ),
+			'#https?://kck\.st/.*#i'                       => array( 'https://www.kickstarter.com/services/oembed', true ),
 			'#https?://cloudup\.com/.*#i'                  => array( 'https://cloudup.com/oembed', true ),
 			'#https?://(www\.)?reverbnation\.com/.*#i'     => array( 'https://www.reverbnation.com/oembed', true ),
 			'#https?://videopress\.com/v/.*#'              => array( 'https://public-api.wordpress.com/oembed/?for=' . $host, true ),
@@ -157,8 +158,8 @@ class WP_oEmbed {
 		 * | TED          | ted.com                                   | 4.0.0   |
 		 * | YouTube      | youtube.com/playlist                      | 4.0.0   |
 		 * | Tumblr       | tumblr.com                                | 4.2.0   |
-		 * | Kickwoodlandgroove  | kickwoodlandgroove.com                           | 4.2.0   |
-		 * | Kickwoodlandgroove  | kck.st                                    | 4.2.0   |
+		 * | Kickstarter  | kickstarter.com                           | 4.2.0   |
+		 * | Kickstarter  | kck.st                                    | 4.2.0   |
 		 * | Cloudup      | cloudup.com                               | 4.3.0   |
 		 * | ReverbNation | reverbnation.com                          | 4.4.0   |
 		 * | VideoPress   | videopress.com                            | 4.4.0   |

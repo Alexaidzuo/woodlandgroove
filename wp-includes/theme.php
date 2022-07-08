@@ -45,7 +45,7 @@ function wp_get_themes( $args = array() ) {
 	$theme_directories = search_theme_directories();
 
 	if ( is_array( $wp_theme_directories ) && count( $wp_theme_directories ) > 1 ) {
-		// Make sure the current theme wins out, in case search_theme_directories() picks the wrong
+		// Make sure the active theme wins out, in case search_theme_directories() picks the wrong
 		// one in the case of a conflict. (Normally, last registered theme root wins.)
 		$current_theme = get_stylesheet();
 		if ( isset( $theme_directories[ $current_theme ] ) ) {
@@ -105,10 +105,10 @@ function wp_get_themes( $args = array() ) {
  *
  * @global array $wp_theme_directories
  *
- * @param string $stylesheet Optional. Directory name for the theme. Defaults to current theme.
+ * @param string $stylesheet Optional. Directory name for the theme. Defaults to active theme.
  * @param string $theme_root Optional. Absolute path of the theme root to look in.
  *                           If not specified, get_raw_theme_root() is used to calculate
- *                           the theme root for the $stylesheet provided (or current theme).
+ *                           the theme root for the $stylesheet provided (or active theme).
  * @return WP_Theme Theme object. Be sure to check the object's exists() method
  *                  if you need to confirm the theme's existence.
  */
@@ -182,11 +182,11 @@ function get_stylesheet() {
 }
 
 /**
- * Retrieves stylesheet directory path for current theme.
+ * Retrieves stylesheet directory path for the active theme.
  *
  * @since 1.5.0
  *
- * @return string Path to current theme's stylesheet directory.
+ * @return string Path to active theme's stylesheet directory.
  */
 function get_stylesheet_directory() {
 	$stylesheet     = get_stylesheet();
@@ -194,23 +194,23 @@ function get_stylesheet_directory() {
 	$stylesheet_dir = "$theme_root/$stylesheet";
 
 	/**
-	 * Filters the stylesheet directory path for current theme.
+	 * Filters the stylesheet directory path for the active theme.
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param string $stylesheet_dir Absolute path to the current theme.
-	 * @param string $stylesheet     Directory name of the current theme.
+	 * @param string $stylesheet_dir Absolute path to the active theme.
+	 * @param string $stylesheet     Directory name of the active theme.
 	 * @param string $theme_root     Absolute path to themes directory.
 	 */
 	return apply_filters( 'stylesheet_directory', $stylesheet_dir, $stylesheet, $theme_root );
 }
 
 /**
- * Retrieves stylesheet directory URI for current theme.
+ * Retrieves stylesheet directory URI for the active theme.
  *
  * @since 1.5.0
  *
- * @return string URI to current theme's stylesheet directory.
+ * @return string URI to active theme's stylesheet directory.
  */
 function get_stylesheet_directory_uri() {
 	$stylesheet         = str_replace( '%2F', '/', rawurlencode( get_stylesheet() ) );
@@ -230,25 +230,25 @@ function get_stylesheet_directory_uri() {
 }
 
 /**
- * Retrieves stylesheet URI for current theme.
+ * Retrieves stylesheet URI for the active theme.
  *
  * The stylesheet file name is 'style.css' which is appended to the stylesheet directory URI path.
  * See get_stylesheet_directory_uri().
  *
  * @since 1.5.0
  *
- * @return string URI to current theme's stylesheet.
+ * @return string URI to active theme's stylesheet.
  */
 function get_stylesheet_uri() {
 	$stylesheet_dir_uri = get_stylesheet_directory_uri();
 	$stylesheet_uri     = $stylesheet_dir_uri . '/style.css';
 	/**
-	 * Filters the URI of the current theme stylesheet.
+	 * Filters the URI of the active theme stylesheet.
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param string $stylesheet_uri     Stylesheet URI for the current theme/child theme.
-	 * @param string $stylesheet_dir_uri Stylesheet directory URI for the current theme/child theme.
+	 * @param string $stylesheet_uri     Stylesheet URI for the active theme/child theme.
+	 * @param string $stylesheet_dir_uri Stylesheet directory URI for the active theme/child theme.
 	 */
 	return apply_filters( 'stylesheet_uri', $stylesheet_uri, $stylesheet_dir_uri );
 }
@@ -272,7 +272,7 @@ function get_stylesheet_uri() {
  *
  * @global WP_Locale $wp_locale WordPress date and time locale object.
  *
- * @return string URI to current theme's localized stylesheet.
+ * @return string URI to active theme's localized stylesheet.
  */
 function get_locale_stylesheet_uri() {
 	global $wp_locale;
@@ -298,7 +298,7 @@ function get_locale_stylesheet_uri() {
 }
 
 /**
- * Retrieves name of the current theme.
+ * Retrieves name of the active theme.
  *
  * @since 1.5.0
  *
@@ -306,21 +306,21 @@ function get_locale_stylesheet_uri() {
  */
 function get_template() {
 	/**
-	 * Filters the name of the current theme.
+	 * Filters the name of the active theme.
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param string $template Current theme's directory name.
+	 * @param string $template active theme's directory name.
 	 */
 	return apply_filters( 'template', get_option( 'template' ) );
 }
 
 /**
- * Retrieves template directory path for current theme.
+ * Retrieves template directory path for the active theme.
  *
  * @since 1.5.0
  *
- * @return string Path to current theme's template directory.
+ * @return string Path to active theme's template directory.
  */
 function get_template_directory() {
 	$template     = get_template();
@@ -328,23 +328,23 @@ function get_template_directory() {
 	$template_dir = "$theme_root/$template";
 
 	/**
-	 * Filters the current theme directory path.
+	 * Filters the active theme directory path.
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param string $template_dir The path of the current theme directory.
-	 * @param string $template     Directory name of the current theme.
+	 * @param string $template_dir The path of the active theme directory.
+	 * @param string $template     Directory name of the active theme.
 	 * @param string $theme_root   Absolute path to the themes directory.
 	 */
 	return apply_filters( 'template_directory', $template_dir, $template, $theme_root );
 }
 
 /**
- * Retrieves template directory URI for current theme.
+ * Retrieves template directory URI for the active theme.
  *
  * @since 1.5.0
  *
- * @return string URI to current theme's template directory.
+ * @return string URI to active theme's template directory.
  */
 function get_template_directory_uri() {
 	$template         = str_replace( '%2F', '/', rawurlencode( get_template() ) );
@@ -352,12 +352,12 @@ function get_template_directory_uri() {
 	$template_dir_uri = "$theme_root_uri/$template";
 
 	/**
-	 * Filters the current theme directory URI.
+	 * Filters the active theme directory URI.
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param string $template_dir_uri The URI of the current theme directory.
-	 * @param string $template         Directory name of the current theme.
+	 * @param string $template_dir_uri The URI of the active theme directory.
+	 * @param string $template         Directory name of the active theme.
 	 * @param string $theme_root_uri   The themes root URI.
 	 */
 	return apply_filters( 'template_directory_uri', $template_dir_uri, $template, $theme_root_uri );
@@ -499,7 +499,7 @@ function search_theme_directories( $force = false ) {
 	/* Loop the registered theme directories and extract all themes */
 	foreach ( $wp_theme_directories as $theme_root ) {
 
-		// Start with directories in the root of the current theme directory.
+		// Start with directories in the root of the active theme directory.
 		$dirs = @ scandir( $theme_root );
 		if ( ! $dirs ) {
 			trigger_error( "$theme_root is not readable", E_USER_NOTICE );
@@ -683,7 +683,7 @@ function get_raw_theme_root( $stylesheet_or_template, $skip_cache = false ) {
 
 	$theme_root = false;
 
-	// If requesting the root for the current theme, consult options to avoid calling get_theme_roots().
+	// If requesting the root for the active theme, consult options to avoid calling get_theme_roots().
 	if ( ! $skip_cache ) {
 		if ( get_option( 'stylesheet' ) == $stylesheet_or_template ) {
 			$theme_root = get_option( 'stylesheet_root' );
@@ -830,16 +830,20 @@ function switch_theme( $stylesheet ) {
 }
 
 /**
- * Checks that the current theme has 'index.php' and 'style.css' files.
+ * Checks that the active theme has the required files.
+ *
+ * Standalone themes need to have a `templates/index.html` or `index.php` template file.
+ * Child themes need to have a `Template` header in the `style.css` stylesheet.
  *
  * Does not initially check the default theme, which is the fallback and should always exist.
  * But if it doesn't exist, it'll fall back to the latest core default theme that does exist.
- * Will switch theme to the fallback theme if current theme does not validate.
+ * Will switch theme to the fallback theme if active theme does not validate.
  *
  * You can use the {@see 'validate_current_theme'} filter to return false to disable
  * this functionality.
  *
  * @since 1.5.0
+ * @since 6.0.0 Removed the requirement for block themes to have an `index.php` template.
  *
  * @see WP_DEFAULT_THEME
  *
@@ -847,17 +851,21 @@ function switch_theme( $stylesheet ) {
  */
 function validate_current_theme() {
 	/**
-	 * Filters whether to validate the current theme.
+	 * Filters whether to validate the active theme.
 	 *
 	 * @since 2.7.0
 	 *
-	 * @param bool $validate Whether to validate the current theme. Default true.
+	 * @param bool $validate Whether to validate the active theme. Default true.
 	 */
 	if ( wp_installing() || ! apply_filters( 'validate_current_theme', true ) ) {
 		return true;
 	}
 
-	if ( ! file_exists( get_template_directory() . '/index.php' ) ) {
+	if (
+		! file_exists( get_template_directory() . '/templates/index.html' )
+		&& ! file_exists( get_template_directory() . '/block-templates/index.html' ) // Deprecated path support since 5.9.0.
+		&& ! file_exists( get_template_directory() . '/index.php' )
+	) {
 		// Invalid.
 	} elseif ( ! file_exists( get_template_directory() . '/style.css' ) ) {
 		// Invalid.
@@ -981,7 +989,7 @@ function get_theme_mods() {
 }
 
 /**
- * Retrieves theme modification value for the current theme.
+ * Retrieves theme modification value for the active theme.
  *
  * If the modification name does not exist and `$default` is a string, then the
  * default will be passed through the {@link https://www.php.net/sprintf sprintf()}
@@ -1007,7 +1015,7 @@ function get_theme_mod( $name, $default = false ) {
 		 *
 		 * @since 2.2.0
 		 *
-		 * @param mixed $current_mod The value of the current theme modification.
+		 * @param mixed $current_mod The value of the active theme modification.
 		 */
 		return apply_filters( "theme_mod_{$name}", $mods[ $name ] );
 	}
@@ -1026,7 +1034,7 @@ function get_theme_mod( $name, $default = false ) {
 }
 
 /**
- * Updates theme modification value for the current theme.
+ * Updates theme modification value for the active theme.
  *
  * @since 2.1.0
  * @since 5.6.0 A return value was added.
@@ -1059,7 +1067,7 @@ function set_theme_mod( $name, $value ) {
 }
 
 /**
- * Removes theme modification name from current theme list.
+ * Removes theme modification name from active theme list.
  *
  * If removing the name also removes all elements, then the entire option
  * will be removed.
@@ -1088,7 +1096,7 @@ function remove_theme_mod( $name ) {
 }
 
 /**
- * Removes theme modifications option for current theme.
+ * Removes theme modifications option for the active theme.
  *
  * @since 2.1.0
  */
@@ -1395,7 +1403,7 @@ function header_image() {
 }
 
 /**
- * Gets the header images uploaded for the current theme.
+ * Gets the header images uploaded for the active theme.
  *
  * @since 3.2.0
  *
@@ -1875,7 +1883,7 @@ function wp_custom_css_cb() {
  *
  * @since 4.7.0
  *
- * @param string $stylesheet Optional. A theme object stylesheet name. Defaults to the current theme.
+ * @param string $stylesheet Optional. A theme object stylesheet name. Defaults to the active theme.
  * @return WP_Post|null The custom_css post or null if none exists.
  */
 function wp_get_custom_css_post( $stylesheet = '' ) {
@@ -1926,7 +1934,7 @@ function wp_get_custom_css_post( $stylesheet = '' ) {
  *
  * @since 4.7.0
  *
- * @param string $stylesheet Optional. A theme object stylesheet name. Defaults to the current theme.
+ * @param string $stylesheet Optional. A theme object stylesheet name. Defaults to the active theme.
  * @return string The Custom CSS Post content.
  */
 function wp_get_custom_css( $stylesheet = '' ) {
@@ -1942,7 +1950,7 @@ function wp_get_custom_css( $stylesheet = '' ) {
 	}
 
 	/**
-	 * Filters the Custom CSS Output into the <head>.
+	 * Filters the custom CSS output into the head element.
 	 *
 	 * @since 4.7.0
 	 *
@@ -1968,7 +1976,7 @@ function wp_get_custom_css( $stylesheet = '' ) {
  *     @type string $preprocessed Optional. Pre-processed CSS, stored in `post_content_filtered`.
  *                                Normally empty string.
  *     @type string $stylesheet   Optional. Stylesheet (child theme) to update.
- *                                Defaults to current theme/stylesheet.
+ *                                Defaults to active theme/stylesheet.
  * }
  * @return WP_Post|WP_Error Post on success, error on failure.
  */
@@ -2127,7 +2135,7 @@ function remove_editor_styles() {
  */
 function get_editor_stylesheets() {
 	$stylesheets = array();
-	// Load editor_style.css if the current theme supports it.
+	// Load editor_style.css if the active theme supports it.
 	if ( ! empty( $GLOBALS['editor_styles'] ) && is_array( $GLOBALS['editor_styles'] ) ) {
 		$editor_styles = $GLOBALS['editor_styles'];
 
@@ -2173,14 +2181,14 @@ function get_editor_stylesheets() {
 }
 
 /**
- * Expands a theme's woodlandgroove content configuration using core-provided data.
+ * Expands a theme's starter content configuration using core-provided data.
  *
  * @since 4.7.0
  *
- * @return array Array of woodlandgroove content.
+ * @return array Array of starter content.
  */
-function get_theme_woodlandgroove_content() {
-	$theme_support = get_theme_support( 'woodlandgroove-content' );
+function get_theme_starter_content() {
+	$theme_support = get_theme_support( 'starter-content' );
 	if ( is_array( $theme_support ) && ! empty( $theme_support[0] ) && is_array( $theme_support[0] ) ) {
 		$config = $theme_support[0];
 	} else {
@@ -2192,16 +2200,16 @@ function get_theme_woodlandgroove_content() {
 			'text_business_info' => array(
 				'text',
 				array(
-					'title'  => _x( 'Find Us', 'Theme woodlandgroove content' ),
+					'title'  => _x( 'Find Us', 'Theme starter content' ),
 					'text'   => implode(
 						'',
 						array(
-							'<strong>' . _x( 'Address', 'Theme woodlandgroove content' ) . "</strong>\n",
-							_x( '123 Main Street', 'Theme woodlandgroove content' ) . "\n",
-							_x( 'New York, NY 10001', 'Theme woodlandgroove content' ) . "\n\n",
-							'<strong>' . _x( 'Hours', 'Theme woodlandgroove content' ) . "</strong>\n",
-							_x( 'Monday&ndash;Friday: 9:00AM&ndash;5:00PM', 'Theme woodlandgroove content' ) . "\n",
-							_x( 'Saturday &amp; Sunday: 11:00AM&ndash;3:00PM', 'Theme woodlandgroove content' ),
+							'<strong>' . _x( 'Address', 'Theme starter content' ) . "</strong>\n",
+							_x( '123 Main Street', 'Theme starter content' ) . "\n",
+							_x( 'New York, NY 10001', 'Theme starter content' ) . "\n\n",
+							'<strong>' . _x( 'Hours', 'Theme starter content' ) . "</strong>\n",
+							_x( 'Monday&ndash;Friday: 9:00AM&ndash;5:00PM', 'Theme starter content' ) . "\n",
+							_x( 'Saturday &amp; Sunday: 11:00AM&ndash;3:00PM', 'Theme starter content' ),
 						)
 					),
 					'filter' => true,
@@ -2211,8 +2219,8 @@ function get_theme_woodlandgroove_content() {
 			'text_about'         => array(
 				'text',
 				array(
-					'title'  => _x( 'About This Site', 'Theme woodlandgroove content' ),
-					'text'   => _x( 'This may be a good place to introduce yourself and your site or include some credits.', 'Theme woodlandgroove content' ),
+					'title'  => _x( 'About This Site', 'Theme starter content' ),
+					'text'   => _x( 'This may be a good place to introduce yourself and your site or include some credits.', 'Theme starter content' ),
 					'filter' => true,
 					'visual' => true,
 				),
@@ -2220,50 +2228,50 @@ function get_theme_woodlandgroove_content() {
 			'archives'           => array(
 				'archives',
 				array(
-					'title' => _x( 'Archives', 'Theme woodlandgroove content' ),
+					'title' => _x( 'Archives', 'Theme starter content' ),
 				),
 			),
 			'calendar'           => array(
 				'calendar',
 				array(
-					'title' => _x( 'Calendar', 'Theme woodlandgroove content' ),
+					'title' => _x( 'Calendar', 'Theme starter content' ),
 				),
 			),
 			'categories'         => array(
 				'categories',
 				array(
-					'title' => _x( 'Categories', 'Theme woodlandgroove content' ),
+					'title' => _x( 'Categories', 'Theme starter content' ),
 				),
 			),
 			'meta'               => array(
 				'meta',
 				array(
-					'title' => _x( 'Meta', 'Theme woodlandgroove content' ),
+					'title' => _x( 'Meta', 'Theme starter content' ),
 				),
 			),
 			'recent-comments'    => array(
 				'recent-comments',
 				array(
-					'title' => _x( 'Recent Comments', 'Theme woodlandgroove content' ),
+					'title' => _x( 'Recent Comments', 'Theme starter content' ),
 				),
 			),
 			'recent-posts'       => array(
 				'recent-posts',
 				array(
-					'title' => _x( 'Recent Posts', 'Theme woodlandgroove content' ),
+					'title' => _x( 'Recent Posts', 'Theme starter content' ),
 				),
 			),
 			'search'             => array(
 				'search',
 				array(
-					'title' => _x( 'Search', 'Theme woodlandgroove content' ),
+					'title' => _x( 'Search', 'Theme starter content' ),
 				),
 			),
 		),
 		'nav_menus' => array(
 			'link_home'       => array(
 				'type'  => 'custom',
-				'title' => _x( 'Home', 'Theme woodlandgroove content' ),
+				'title' => _x( 'Home', 'Theme starter content' ),
 				'url'   => home_url( '/' ),
 			),
 			'page_home'       => array( // Deprecated in favor of 'link_home'.
@@ -2293,86 +2301,86 @@ function get_theme_woodlandgroove_content() {
 			),
 
 			'link_email'      => array(
-				'title' => _x( 'Email', 'Theme woodlandgroove content' ),
+				'title' => _x( 'Email', 'Theme starter content' ),
 				'url'   => 'mailto:wordpress@example.com',
 			),
 			'link_facebook'   => array(
-				'title' => _x( 'Facebook', 'Theme woodlandgroove content' ),
+				'title' => _x( 'Facebook', 'Theme starter content' ),
 				'url'   => 'https://www.facebook.com/wordpress',
 			),
 			'link_foursquare' => array(
-				'title' => _x( 'Foursquare', 'Theme woodlandgroove content' ),
+				'title' => _x( 'Foursquare', 'Theme starter content' ),
 				'url'   => 'https://foursquare.com/',
 			),
 			'link_github'     => array(
-				'title' => _x( 'GitHub', 'Theme woodlandgroove content' ),
+				'title' => _x( 'GitHub', 'Theme starter content' ),
 				'url'   => 'https://github.com/wordpress/',
 			),
 			'link_instagram'  => array(
-				'title' => _x( 'Instagram', 'Theme woodlandgroove content' ),
+				'title' => _x( 'Instagram', 'Theme starter content' ),
 				'url'   => 'https://www.instagram.com/explore/tags/wordcamp/',
 			),
 			'link_linkedin'   => array(
-				'title' => _x( 'LinkedIn', 'Theme woodlandgroove content' ),
+				'title' => _x( 'LinkedIn', 'Theme starter content' ),
 				'url'   => 'https://www.linkedin.com/company/1089783',
 			),
 			'link_pinterest'  => array(
-				'title' => _x( 'Pinterest', 'Theme woodlandgroove content' ),
+				'title' => _x( 'Pinterest', 'Theme starter content' ),
 				'url'   => 'https://www.pinterest.com/',
 			),
 			'link_twitter'    => array(
-				'title' => _x( 'Twitter', 'Theme woodlandgroove content' ),
+				'title' => _x( 'Twitter', 'Theme starter content' ),
 				'url'   => 'https://twitter.com/wordpress',
 			),
 			'link_yelp'       => array(
-				'title' => _x( 'Yelp', 'Theme woodlandgroove content' ),
+				'title' => _x( 'Yelp', 'Theme starter content' ),
 				'url'   => 'https://www.yelp.com',
 			),
 			'link_youtube'    => array(
-				'title' => _x( 'YouTube', 'Theme woodlandgroove content' ),
+				'title' => _x( 'YouTube', 'Theme starter content' ),
 				'url'   => 'https://www.youtube.com/channel/UCdof4Ju7amm1chz1gi1T2ZA',
 			),
 		),
 		'posts'     => array(
 			'home'             => array(
 				'post_type'    => 'page',
-				'post_title'   => _x( 'Home', 'Theme woodlandgroove content' ),
+				'post_title'   => _x( 'Home', 'Theme starter content' ),
 				'post_content' => sprintf(
 					"<!-- wp:paragraph -->\n<p>%s</p>\n<!-- /wp:paragraph -->",
-					_x( 'Welcome to your site! This is your homepage, which is what most visitors will see when they come to your site for the first time.', 'Theme woodlandgroove content' )
+					_x( 'Welcome to your site! This is your homepage, which is what most visitors will see when they come to your site for the first time.', 'Theme starter content' )
 				),
 			),
 			'about'            => array(
 				'post_type'    => 'page',
-				'post_title'   => _x( 'About', 'Theme woodlandgroove content' ),
+				'post_title'   => _x( 'About', 'Theme starter content' ),
 				'post_content' => sprintf(
 					"<!-- wp:paragraph -->\n<p>%s</p>\n<!-- /wp:paragraph -->",
-					_x( 'You might be an artist who would like to introduce yourself and your work here or maybe you&rsquo;re a business with a mission to describe.', 'Theme woodlandgroove content' )
+					_x( 'You might be an artist who would like to introduce yourself and your work here or maybe you&rsquo;re a business with a mission to describe.', 'Theme starter content' )
 				),
 			),
 			'contact'          => array(
 				'post_type'    => 'page',
-				'post_title'   => _x( 'Contact', 'Theme woodlandgroove content' ),
+				'post_title'   => _x( 'Contact', 'Theme starter content' ),
 				'post_content' => sprintf(
 					"<!-- wp:paragraph -->\n<p>%s</p>\n<!-- /wp:paragraph -->",
-					_x( 'This is a page with some basic contact information, such as an address and phone number. You might also try a plugin to add a contact form.', 'Theme woodlandgroove content' )
+					_x( 'This is a page with some basic contact information, such as an address and phone number. You might also try a plugin to add a contact form.', 'Theme starter content' )
 				),
 			),
 			'blog'             => array(
 				'post_type'  => 'page',
-				'post_title' => _x( 'Blog', 'Theme woodlandgroove content' ),
+				'post_title' => _x( 'Blog', 'Theme starter content' ),
 			),
 			'news'             => array(
 				'post_type'  => 'page',
-				'post_title' => _x( 'News', 'Theme woodlandgroove content' ),
+				'post_title' => _x( 'News', 'Theme starter content' ),
 			),
 
 			'homepage-section' => array(
 				'post_type'    => 'page',
-				'post_title'   => _x( 'A homepage section', 'Theme woodlandgroove content' ),
+				'post_title'   => _x( 'A homepage section', 'Theme starter content' ),
 				'post_content' => sprintf(
 					"<!-- wp:paragraph -->\n<p>%s</p>\n<!-- /wp:paragraph -->",
-					_x( 'This is an example of a homepage section. Homepage sections can be any page other than the homepage itself, including the page that shows your latest blog posts.', 'Theme woodlandgroove content' )
+					_x( 'This is an example of a homepage section. Homepage sections can be any page other than the homepage itself, including the page that shows your latest blog posts.', 'Theme starter content' )
 				),
 			),
 		),
@@ -2487,14 +2495,14 @@ function get_theme_woodlandgroove_content() {
 	}
 
 	/**
-	 * Filters the expanded array of woodlandgroove content.
+	 * Filters the expanded array of starter content.
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param array $content Array of woodlandgroove content.
-	 * @param array $config  Array of theme-specific woodlandgroove content configuration.
+	 * @param array $content Array of starter content.
+	 * @param array $config  Array of theme-specific starter content configuration.
 	 */
-	return apply_filters( 'get_theme_woodlandgroove_content', $content, $config );
+	return apply_filters( 'get_theme_starter_content', $content, $config );
 }
 
 /**
@@ -2518,7 +2526,7 @@ function get_theme_woodlandgroove_content() {
  * @since 3.9.0 The `html5` feature now also accepts 'gallery' and 'caption'.
  * @since 4.1.0 The `title-tag` feature was added.
  * @since 4.5.0 The `customize-selective-refresh-widgets` feature was added.
- * @since 4.7.0 The `woodlandgroove-content` feature was added.
+ * @since 4.7.0 The `starter-content` feature was added.
  * @since 5.0.0 The `responsive-embeds`, `align-wide`, `dark-editor-style`, `disable-custom-colors`,
  *              `disable-custom-font-sizes`, `editor-color-palette`, `editor-font-sizes`,
  *              `editor-styles`, and `wp-block-styles` features were added.
@@ -2557,7 +2565,7 @@ function get_theme_woodlandgroove_content() {
  *                          - 'post-formats'
  *                          - 'post-thumbnails'
  *                          - 'responsive-embeds'
- *                          - 'woodlandgroove-content'
+ *                          - 'starter-content'
  *                          - 'title-tag'
  *                          - 'wp-block-styles'
  *                          - 'widgets'
@@ -2607,16 +2615,19 @@ function add_theme_support( $feature, ...$args ) {
 
 		case 'html5':
 			// You can't just pass 'html5', you need to pass an array of types.
-			if ( empty( $args[0] ) ) {
-				// Build an array of types for back-compat.
-				$args = array( 0 => array( 'comment-list', 'comment-form', 'search-form' ) );
-			} elseif ( ! isset( $args[0] ) || ! is_array( $args[0] ) ) {
+			if ( empty( $args[0] ) || ! is_array( $args[0] ) ) {
 				_doing_it_wrong(
 					"add_theme_support( 'html5' )",
 					__( 'You need to pass an array of types.' ),
 					'3.6.1'
 				);
-				return false;
+
+				if ( ! empty( $args[0] ) && ! is_array( $args[0] ) ) {
+					return false;
+				}
+
+				// Build an array of types for back-compat.
+				$args = array( 0 => array( 'comment-list', 'comment-form', 'search-form' ) );
 			}
 
 			// Calling 'html5' again merges, rather than overwrites.
@@ -3024,7 +3035,7 @@ function _remove_theme_support( $feature ) {
  * @param string $feature The feature being checked. See add_theme_support() for the list
  *                        of possible values.
  * @param mixed  ...$args Optional extra arguments to be checked against certain features.
- * @return bool True if the current theme supports the feature, false otherwise.
+ * @return bool True if the active theme supports the feature, false otherwise.
  */
 function current_theme_supports( $feature, ...$args ) {
 	global $_wp_theme_features;
@@ -3037,9 +3048,10 @@ function current_theme_supports( $feature, ...$args ) {
 		return false;
 	}
 
-	// If no args passed then no extra checks need be performed.
+	// If no args passed then no extra checks need to be performed.
 	if ( ! $args ) {
-		return true;
+		/** This filter is documented in wp-includes/theme.php */
+		return apply_filters( "current_theme_supports-{$feature}", true, $args, $_wp_theme_features[ $feature ] ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 	}
 
 	switch ( $feature ) {
@@ -3074,14 +3086,14 @@ function current_theme_supports( $feature, ...$args ) {
 	}
 
 	/**
-	 * Filters whether the current theme supports a specific feature.
+	 * Filters whether the active theme supports a specific feature.
 	 *
 	 * The dynamic portion of the hook name, `$feature`, refers to the specific
 	 * theme feature. See add_theme_support() for the list of possible values.
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param bool   $supports Whether the current theme supports the given feature. Default true.
+	 * @param bool   $supports Whether the active theme supports the given feature. Default true.
 	 * @param array  $args     Array of arguments for the feature.
 	 * @param string $feature  The theme feature.
 	 */
@@ -3096,7 +3108,7 @@ function current_theme_supports( $feature, ...$args ) {
  * @param string $feature The feature being checked. See add_theme_support() for the list
  *                        of possible values.
  * @param string $include Path to the file.
- * @return bool True if the current theme supports the supplied feature, false otherwise.
+ * @return bool True if the active theme supports the supplied feature, false otherwise.
  */
 function require_if_theme_supports( $feature, $include ) {
 	if ( current_theme_supports( $feature ) ) {
@@ -3109,7 +3121,7 @@ function require_if_theme_supports( $feature, $include ) {
 /**
  * Registers a theme feature for use in add_theme_support().
  *
- * This does not indicate that the current theme supports the feature, it only describes
+ * This does not indicate that the active theme supports the feature, it only describes
  * the feature's supported options.
  *
  * @since 5.5.0
@@ -3622,7 +3634,7 @@ function _wp_customize_loader_settings() {
  *
  * @since 3.4.0
  *
- * @param string $stylesheet Optional. Theme to customize. Defaults to current theme.
+ * @param string $stylesheet Optional. Theme to customize. Defaults to active theme.
  *                           The theme's stylesheet will be urlencoded if necessary.
  * @return string
  */
@@ -4155,11 +4167,11 @@ function create_initial_theme_features() {
 }
 
 /**
- * Returns whether the current theme is a block-based theme or not.
+ * Returns whether the active theme is a block-based theme or not.
  *
  * @since 5.9.0
  *
- * @return boolean Whether the current theme is a block-based theme or not.
+ * @return boolean Whether the active theme is a block-based theme or not.
  */
 function wp_is_block_theme() {
 	return wp_get_theme()->is_block_theme();
