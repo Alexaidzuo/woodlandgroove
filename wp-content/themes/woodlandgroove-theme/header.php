@@ -74,6 +74,7 @@
 					<img class="right-logo" src="<?php echo get_template_directory_uri().'/assets/images/grow.webp'; ?>" alt="Help us Grow">
 
 					<a class="btn btn--cta-donate" href="<?php echo get_site_url()."/donate" ?>">Donate</a>
+					<a class="nav-wall" href="<?php echo get_site_url()."/wall-of-love" ?>">Wall of Love</a>
 				</div>
 
 			</div> <!-- /.row justify-content-between -->

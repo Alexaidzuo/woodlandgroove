@@ -3212,6 +3212,19 @@ h6 {
   height: 100%;
 }
 
+.nav-wall {
+  margin-left: 15px;
+  font-weight: 600;
+  color: #ddad9f;
+  -webkit-transition: 350ms ease;
+  -o-transition: 350ms ease;
+  transition: 350ms ease;
+}
+
+.nav-wall:hover {
+  color: #aeaeae;
+}
+
 .nav-right {
   display: -webkit-box;
   display: -webkit-flex;
@@ -3233,6 +3246,10 @@ h6 {
     width: 100%;
     margin-top: 15px;
   }
+}
+
+.nav-right .btn:hover {
+  background-color: #458a40;
 }
 
 .right-logo {
@@ -4393,6 +4410,63 @@ fieldset {
     top: 30px;
     left: 0;
   }
+}
+
+.wall {
+  margin-top: 50px;
+}
+
+.wall__content {
+  margin-bottom: 25px;
+  line-height: 24px;
+}
+
+.wall__button {
+  margin-bottom: 50px;
+}
+
+.wall__wrap {
+  margin-bottom: 30px;
+}
+
+.wall__inner {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 15px;
+  min-height: 150px;
+  -webkit-box-shadow: 0px 5px 24px 6px rgba(0, 0, 0, 0.06);
+          box-shadow: 0px 5px 24px 6px rgba(0, 0, 0, 0.06);
+}
+
+.wall__message {
+  font-size: 18px;
+  font-weight: 600;
+  font-style: italic;
+  text-align: center;
+}
+
+.wall__name {
+  margin: 0;
+}
+
+.wall__date {
+  margin: 0;
+  font-size: 14px;
 }
 
 /*# sourceMappingURL=style.css.map */

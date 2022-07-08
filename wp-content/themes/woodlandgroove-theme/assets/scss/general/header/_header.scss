@@ -5,6 +5,17 @@
   }
 }
 
+.nav-wall {
+  margin-left: 15px;
+  font-weight: 600;
+  color: $light-brown;
+  transition: $dur $ease;
+
+  &:hover {
+    color: $gray;
+  }
+}
+
 .nav-right {
   display: flex;
   justify-content: center;
@@ -15,6 +26,13 @@
     width: 100%;
     margin-top: 15px;
   }
+
+  .btn {
+    &:hover {
+     background-color: $green;
+    }
+  }
+
 }
 .right-logo {
   max-height: 40px;
