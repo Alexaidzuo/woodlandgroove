@@ -3554,6 +3554,36 @@ class FrmProEntriesController {
 	}
 
 	/**
+	 * AJAX handler for deleting draft entry.
+	 *
+	 * @since 5.4
+	 */
+	public static function delete_draft_entry_ajax() {
+		check_ajax_referer( 'frm_ajax' );
+
+		$form_id = FrmAppHelper::get_post_param( 'form', 0, 'intval' );
+		if ( ! $form_id ) {
+			wp_send_json_error();
+		}
+
+		$user_id = get_current_user_id();
+
+		global $wpdb;
+
+		$wpdb->delete(
+			$wpdb->prefix . 'frm_items',
+			array(
+				'is_draft' => 1,
+				'form_id'  => $form_id,
+				'user_id'  => $user_id,
+			),
+			array( '%d', '%d', '%d' )
+		);
+
+		wp_send_json_success();
+	}
+
+	/**
 	 * @since 3.0
 	 * @deprecated 4.0
 	 */

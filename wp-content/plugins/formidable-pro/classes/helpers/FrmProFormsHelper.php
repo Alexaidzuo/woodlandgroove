@@ -368,14 +368,33 @@ echo $custom_options;
 			$rule['parent_form_id'] = $atts['parent_form_id'];
 		}
 
-		if ( ! empty( $field['is_currency'] ) ) {
-			$rule['is_currency'] = true;
-			if ( ! empty( $field['custom_currency'] ) ) {
-				$rule['custom_currency'] = self::prepare_custom_currency( $field );
-			}
-		}
+		self::add_is_currency_calc_rule_for_field( $rule, $field );
 
 		return $rule;
+	}
+
+	/**
+	 * Adds `is_currency` rule for field if applicable.
+	 *
+	 * @since 5.2.06
+	 *
+	 * @param array $rule Calculation rule.
+	 * @param array $field Field array.
+	 */
+	private static function add_is_currency_calc_rule_for_field( &$rule, $field ) {
+		if ( empty( $field['is_currency'] ) ) {
+			return;
+		}
+
+		// If field is invisible and converted to <input type="hidden">, treat it as a number field instead of price.
+		if ( ! FrmProFieldsHelper::is_field_visible_to_user( $field ) ) {
+			return;
+		}
+
+		$rule['is_currency'] = true;
+		if ( ! empty( $field['custom_currency'] ) ) {
+			$rule['custom_currency'] = self::prepare_custom_currency( $field );
+		}
 	}
 
 	/**
@@ -446,7 +465,7 @@ echo $custom_options;
 	 * @return bool
 	 */
 	private static function has_variable_html_id( $field ) {
-		$is_radio_check = in_array( $field->type, array( 'radio', 'scale', 'star', 'checkbox' ), true );
+		$is_radio_check = in_array( $field->type, self::radio_similar_field_types(), true );
 		$is_other_radio = in_array( $field->type, array( 'lookup', 'product' ), true ) && in_array( $field->field_options['data_type'], array( 'radio', 'checkbox' ), true );
 
 		$has_variable_html_id = $is_radio_check || $is_other_radio;
@@ -460,6 +479,24 @@ echo $custom_options;
 		 * @param array $args                 Arguments. Contains `field`.
 		 */
 		return apply_filters( 'frm_pro_field_has_variable_html_id', $has_variable_html_id, compact( 'field' ) );
+	}
+
+	/**
+	 * Gets field types that are similar to radio field.
+	 *
+	 * @since 5.4
+	 *
+	 * @return array
+	 */
+	public static function radio_similar_field_types() {
+		/**
+		 * Allows modifying radio similar field types.
+		 *
+		 * @since 5.4
+		 *
+		 * @param array $field_types Field types.
+		 */
+		return apply_filters( 'frm_pro_radio_similar_field_types', array( 'radio', 'scale', 'star', 'checkbox' ) );
 	}
 
 	/**
@@ -933,6 +970,22 @@ echo $custom_options;
 
 	public static function get_draft_link( $form ) {
 		return self::get_draft_button( $form, '', FrmFormsHelper::get_draft_link() );
+	}
+
+	/**
+	 * Gets HTML of start over button.
+	 *
+	 * @since 5.3.1
+	 *
+	 * @param object $form Form object.
+	 * @return string
+	 */
+	public static function get_start_over_html( $form ) {
+		if ( ! method_exists( 'FrmFormsHelper', 'get_start_over_shortcode' ) ) {
+			return '';
+		}
+
+		return self::get_draft_button( $form, '', FrmFormsHelper::get_start_over_shortcode(), 'start_over' );
 	}
 
 	public static function is_show_data_field( $field ) {

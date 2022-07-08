@@ -42,6 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		name: '<?php echo esc_js( $view->post_title ); ?>',
 		viewKey: '<?php echo esc_js( $view->post_name ); ?>',
 		formId: '<?php echo esc_js( $form_id ); ?>',
+		applicationIds: <?php echo wp_json_encode( $application_ids ); ?>,
 		showCount: '<?php echo esc_js( $show_count ); ?>',
 		activePreviewFilter: '<?php echo esc_js( $active_preview_filter ); ?>'
 	};

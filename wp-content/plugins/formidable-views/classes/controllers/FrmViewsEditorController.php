@@ -42,7 +42,7 @@ class FrmViewsEditorController {
 		}
 
 		$view = get_post( $view_id );
-		if ( ! $view || FrmViewsDisplaysController::$post_type !== $view->post_type ) {
+		if ( ! $view || ! ( $view instanceof WP_Post ) || FrmViewsDisplaysController::$post_type !== $view->post_type ) {
 			self::handle_invalid_view();
 		}
 
@@ -65,6 +65,7 @@ class FrmViewsEditorController {
 			self::render_publish_wrapper();
 		}
 
+		$application_ids          = FrmViewsAppHelper::get_application_ids_for_view( $view_id );
 		$editor_path              = FrmViewsAppHelper::views_path() . '/editor/';
 		$show_count               = get_post_meta( $view_id, 'frm_show_count', true );
 		$include_copy_option      = self::include_copy_option();
@@ -220,7 +221,12 @@ class FrmViewsEditorController {
 			FrmViewsAppHelper::add_dom_script();
 		}
 
-		wp_register_script( 'formidable_views_editor', $editor_js_path, array( 'wp-i18n', 'wp-color-picker' ), $version, true );
+		$js_dependencies = array( 'wp-i18n', 'wp-color-picker' );
+		if ( class_exists( 'FrmApplicationsController' ) ) {
+			$js_dependencies[] = 'formidable_dom';
+		}
+
+		wp_register_script( 'formidable_views_editor', $editor_js_path, $js_dependencies, $version, true );
 	}
 
 	/**
@@ -351,6 +357,7 @@ class FrmViewsEditorController {
 			'parameterValue'       => self::get_parameter_value(),
 			'copy'                 => self::get_option_value( 'copy' ),
 			'disablePreview'       => self::get_option_value( 'no_rt' ),
+			'ajaxPagination'       => self::get_option_value( 'ajax_pagination' ),
 		);
 		if ( 'calendar' === get_post_meta( self::$view_id, 'frm_show_count', true ) ) {
 			$response_data = array_merge(
@@ -395,11 +402,64 @@ class FrmViewsEditorController {
 		$name    = FrmAppHelper::get_param( 'name', '', 'post', 'sanitize_text_field' );
 		$view_id = FrmViewsDisplay::create( $form_id, $type, $name );
 
+		self::maybe_add_application_ids_to_view( $view_id, $form_id );
+
 		$redirect      = FrmViewsAppHelper::get_url_to_view_editor( $view_id );
 		$response_data = array(
 			'redirect' => esc_url_raw( $redirect ),
 		);
 		wp_send_json_success( $response_data );
+	}
+
+	/**
+	 * Maybe add application ids to view on create.
+	 *
+	 * @since 5.2
+	 * @param int $view_id
+	 * @param int $form_id
+	 * @return void
+	 */
+	private static function maybe_add_application_ids_to_view( $view_id, $form_id ) {
+		if ( ! is_callable( 'FrmProApplication::add_post_to_application' ) ) {
+			return;
+		}
+
+		$application_id = FrmAppHelper::get_post_param( 'application_id', 0, 'absint' );
+		if ( $application_id ) {
+			FrmProApplication::add_post_to_application( $application_id, $view_id, 'view' );
+			self::add_application_to_form_if_relation_is_missing( $application_id, $form_id );
+		}
+
+		if ( ! $form_id || ! is_callable( 'FrmProApplicationsHelper::get_application_ids_for_form' ) ) {
+			return;
+		}
+
+		$form_application_ids = FrmProApplicationsHelper::get_application_ids_for_form( $form_id );
+		foreach ( $form_application_ids as $form_application_id ) {
+			if ( $application_id && $application_id === $form_application_id ) {
+				// Avoid adding the set application id twice if it's also assigned to the form.
+				continue;
+			}
+			FrmProApplication::add_post_to_application( $form_application_id, $view_id, 'view' );
+		}
+	}
+
+	/**
+	 * @param int $application_id
+	 * @param int $form_id
+	 * @return void
+	 */
+	private static function add_application_to_form_if_relation_is_missing( $application_id, $form_id ) {
+		if ( ! $form_id ) {
+			return;
+		}
+
+		$current_form_ids = array_map( 'intval', get_term_meta( $application_id, '_frm_form_id' ) );
+		if ( in_array( $form_id, $current_form_ids, true ) ) {
+			return;
+		}
+
+		FrmProApplication::add_form_to_application( $application_id, $form_id );
 	}
 
 	private static function get_table_column_options() {
@@ -598,6 +658,7 @@ class FrmViewsEditorController {
 		}
 
 		$name                   = FrmAppHelper::get_param( 'name', '', 'post', 'sanitize_text_field' );
+		$application_ids        = FrmAppHelper::get_param( 'applicationIds', '', 'post' );
 		$post_name              = FrmAppHelper::get_param( 'viewKey', '', 'post', 'sanitize_text_field' );
 		$form_id                = FrmAppHelper::get_param( 'formId', 0, 'post', 'absint' );
 		$empty_message          = FrmAppHelper::get_param( 'emptyMessage', '', 'post' );
@@ -619,10 +680,15 @@ class FrmViewsEditorController {
 		$repeat_event_field_id  = FrmAppHelper::get_param( 'repeatEventFieldId', '', 'post', 'sanitize_text_field' );
 		$repeat_edate_field_id  = FrmAppHelper::get_param( 'repeatEdateFieldId', '', 'post', 'sanitize_text_field' );
 		$disable_preview        = FrmAppHelper::get_param( 'disablePreview', 0, 'post', 'absint' );
+		$ajax_pagination        = $page_size ? FrmAppHelper::get_param( 'ajaxPagination', '0', 'post', 'sanitize_text_field' ) : '0';
 		$active_preview_filter  = FrmAppHelper::get_param( 'activePreviewFilter', '', 'post', 'sanitize_text_field' );
 		$metabox_data           = self::parse_metabox_data( FrmAppHelper::get_param( 'metaboxData', '', 'post' ) );
 		$is_grid_type           = FrmAppHelper::get_param( 'isGridType', 0, 'post', 'absint' );
 		$is_table_type          = FrmAppHelper::get_param( 'isTableType', 0, 'post', 'absint' );
+
+		if ( ! in_array( $ajax_pagination, array( '1', '0', 'load-more', 'infinite-scroll' ), true ) ) {
+			$ajax_pagination = '0';
+		}
 
 		$listing_page_is_json_type = $is_grid_type || $is_table_type;
 		if ( ! $listing_page_is_json_type ) {
@@ -659,6 +725,7 @@ class FrmViewsEditorController {
 			'limit'                 => $limit ? $limit : '',
 			'page_size'             => $page_size ? $page_size : '',
 			'no_rt'                 => $disable_preview ? 1 : 0,
+			'ajax_pagination'       => $ajax_pagination,
 		);
 
 		if ( self::include_copy_option() ) {
@@ -678,7 +745,7 @@ class FrmViewsEditorController {
 				if ( $is_table_type ) {
 					$metabox_data['options']['view_export_possible'] = 1;
 				} else {
-					$metabox_data['options']['view_export_possible'] = self::check_view_data_for_table_type( $show_count, $listing_before_content );
+					$metabox_data['options']['view_export_possible'] = FrmViewsDisplaysHelper::check_view_data_for_table_type( $show_count, $listing_before_content );
 				}
 			}
 			$options = array_merge( $options, $metabox_data['options'] );
@@ -719,6 +786,8 @@ class FrmViewsEditorController {
 		if ( ! empty( $metabox_data['acf'] ) && function_exists( 'acf_save_post' ) ) {
 			acf_save_post( $view_id, $metabox_data['acf'] );
 		}
+
+		self::sync_application_data( $view_id, $application_ids );
 
 		$response_data = array();
 
@@ -954,6 +1023,38 @@ class FrmViewsEditorController {
 	}
 
 	/**
+	 * Update application relation data for view.
+	 *
+	 * @param int   $view_id
+	 * @param mixed $application_ids
+	 * @return void
+	 */
+	private static function sync_application_data( $view_id, $application_ids ) {
+		if ( ! taxonomy_exists( 'frm_application' ) || ! is_callable( 'FrmProApplication::add_post_to_application' ) ) {
+			return;
+		}
+
+		$application_ids          = is_array( $application_ids ) ? array_map( 'intval', $application_ids ) : array();
+		$previous_application_ids = FrmViewsAppHelper::get_application_ids_for_view( $view_id );
+
+		$new_application_ids = array_diff( $application_ids, $previous_application_ids );
+		array_walk(
+			$new_application_ids,
+			function( $application_id ) use ( $view_id ) {
+				FrmProApplication::add_post_to_application( absint( $application_id ), $view_id, 'view' );
+			}
+		);
+
+		$old_application_ids = array_diff( $previous_application_ids, $application_ids );
+		array_walk(
+			$old_application_ids,
+			function( $application_id ) use ( $view_id ) {
+				FrmProApplication::remove_post_from_application( absint( $application_id ), $view_id, 'view' );
+			}
+		);
+	}
+
+	/**
 	 * @param string $type
 	 * @return int 1 or 0.
 	 */
@@ -1062,34 +1163,7 @@ class FrmViewsEditorController {
 	 * @return bool
 	 */
 	private static function is_legacy_table_type( $view_id ) {
-		$before_content = self::get_option_value( 'before_content' );
-		if ( $before_content ) {
-			$show_count = get_post_meta( $view_id, 'frm_show_count', true );
-			return (bool) self::check_view_data_for_table_type( $show_count, $before_content );
-		}
-		return false;
-	}
-
-	/**
-	 * @param string $show_count
-	 * @param string $listing_before_content
-	 * @return int 1 or 0.
-	 */
-	private static function check_view_data_for_table_type( $show_count, $listing_before_content ) {
-		return in_array( $show_count, array( 'all', 'dynamic' ), true ) && self::check_if_view_before_content_matches_table_type( $listing_before_content ) ? 1 : 0;
-	}
-
-	/**
-	 * @param string $before_content
-	 * @return bool
-	 */
-	private static function check_if_view_before_content_matches_table_type( $before_content ) {
-		$before_content_begins_a_table = false !== strpos( $before_content, '<table' );
-		if ( ! $before_content_begins_a_table ) {
-			return false;
-		}
-		$before_content_ends_a_table = false !== strpos( $before_content, '</table>' );
-		return ! $before_content_ends_a_table;
+		return FrmViewsDisplaysHelper::is_legacy_table_type( $view_id );
 	}
 
 	public static function maybe_highlight_menu() {
@@ -1148,25 +1222,7 @@ class FrmViewsEditorController {
 	 * @return int 1 or 0.
 	 */
 	public static function is_grid_type( $view ) {
-		if ( in_array( get_post_meta( $view->ID, 'frm_grid_view', true ), array( '1', 1 ), true ) ) {
-			return 1;
-		}
-		if ( self::is_table_type( $view ) ) {
-			// table types use grid style content, so check for table before checking content for grid data.
-			return 0;
-		}
-		$show_count = get_post_meta( $view->ID, 'frm_show_count', true );
-		if ( ! in_array( $show_count, array( 'all', 'dynamic' ), true ) ) {
-			return 0;
-		}
-		if ( self::content_is_in_grid_format( $view->post_content ) ) {
-			return 1;
-		}
-		$dyncontent = get_post_meta( $view->ID, 'frm_dyncontent', true );
-		if ( self::content_is_in_grid_format( $dyncontent ) ) {
-			return 1;
-		}
-		return 0;
+		return FrmViewsDisplaysHelper::is_grid_type( $view );
 	}
 
 	/**
@@ -1174,19 +1230,7 @@ class FrmViewsEditorController {
 	 * @return int 1 or 0.
 	 */
 	public static function is_table_type( $view ) {
-		return in_array( get_post_meta( $view->ID, 'frm_table_view', true ), array( 1, '1' ), true ) ? 1 : 0;
-	}
-
-	/**
-	 * @param string $content post_content or dyncontent value.
-	 * @return bool
-	 */
-	private static function content_is_in_grid_format( $content ) {
-		if ( ! $content ) {
-			return false;
-		}
-		$helper = new FrmViewsContentHelper( $content );
-		return $helper->content_is_an_array();
+		return FrmViewsDisplaysHelper::is_table_type( $view );
 	}
 
 	private static function flatten_view() {
@@ -1418,6 +1462,9 @@ class FrmViewsEditorController {
 		}
 
 		global $hook_suffix;
+		if ( is_null( $hook_suffix ) ) {
+			$hook_suffix = ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
 
 		set_current_screen();
 		global $current_screen;

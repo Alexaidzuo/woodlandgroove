@@ -224,12 +224,16 @@ class FrmProFieldFile extends FrmFieldType {
 		}
 	}
 
+	/**
+	 * @param array $atts
+	 * @return array
+	 */
 	public function set_file_atts( $atts ) {
 		$new_atts = array(
-			'show_filename' => ( isset( $atts['show_filename'] ) && $atts['show_filename'] ),
-			'show_image'    => ( isset( $atts['show_image'] ) && $atts['show_image'] ),
-			'add_link'      => ( isset( $atts['add_link'] ) && $atts['add_link'] ),
-			'new_tab'       => ( isset( $atts['new_tab'] ) && $atts['new_tab'] ),
+			'show_filename' => ! empty( $atts['show_filename'] ),
+			'show_image'    => ! empty( $atts['show_image'] ),
+			'add_link'      => ! empty( $atts['add_link'] ),
+			'new_tab'       => ! empty( $atts['new_tab'] ),
 		);
 		return array_merge( $atts, $new_atts );
 	}
@@ -301,10 +305,10 @@ class FrmProFieldFile extends FrmFieldType {
 	 */
 	public function get_displayed_file_html( $ids, $size = 'thumbnail', $atts = array() ) {
 		$defaults = array(
-			'class'         => '',
-			'show_filename' => false,
-			'show_image' => false,
-			'add_link' => false,
+			'class'                  => '',
+			'show_filename'          => false,
+			'show_image'             => false,
+			'add_link'               => false,
 			'add_link_for_non_image' => false,
 		);
 		$atts = wp_parse_args( $atts, $defaults );
@@ -352,8 +356,7 @@ class FrmProFieldFile extends FrmFieldType {
 		$url      = FrmProFileField::get_file_url( $id, $is_image ? $atts['size'] : false );
 
 		if ( ! FrmProFileField::user_has_permission( $id ) ) {
-			$frm_settings = FrmAppHelper::get_settings();
-			$html         = $frm_settings->admin_permission;
+			$html = $this->get_display_html_for_inaccessible_file( $id, $atts );
 		} else {
 			$html = $atts['show_image'] ? wp_get_attachment_image( $id, $atts['size'], ! $is_image ) : '';
 
@@ -361,9 +364,9 @@ class FrmProFieldFile extends FrmFieldType {
 			if ( $atts['show_filename'] ) {
 				$label = $this->get_single_file_name( $id );
 				if ( $atts['show_image'] ) {
-					$html .= ' <span id="frm_media_' . absint( $id ) . '" class="frm_upload_label">' . $label . '</span>';
+					$html .= ' <span id="frm_media_' . absint( $id ) . '" class="frm_upload_label">' . esc_html( $label ) . '</span>';
 				} else {
-					$html .= $label;
+					$html .= esc_html( $label );
 				}
 			}
 
@@ -386,6 +389,24 @@ class FrmProFieldFile extends FrmFieldType {
 
 		$atts['media_id'] = $id;
 		return apply_filters( 'frm_image_html_array', $html, $atts );
+	}
+
+	/**
+	 * @since 5.4.1
+	 *
+	 * @param int   $id File id.
+	 * @param array $atts
+	 * @return string
+	 */
+	private function get_display_html_for_inaccessible_file( $id, $atts ) {
+		if ( ! FrmProFileField::file_is_temporary( $id ) || ! $atts['show_image'] ) {
+			$frm_settings = FrmAppHelper::get_settings();
+			return esc_html( $frm_settings->admin_permission );
+		}
+
+		$file = FrmProFileField::get_mock_file( $id );
+		$html = '<img src="' . esc_url( FrmProFileField::get_safe_file_icon( $file ) ) . '" alt="' . esc_attr( $file['name'] ) . '" />';
+		return $html;
 	}
 
 	/**

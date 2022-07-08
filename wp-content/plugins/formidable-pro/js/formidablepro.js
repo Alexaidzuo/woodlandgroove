@@ -89,10 +89,22 @@ function frmProFormJS() {
 		});
 	}
 
-	function toggleSection() {
+	function toggleSection( e ) {
+		var arrow;
+
+		if ( e.key !== undefined ) {
+			if ( e.key !== ' ' ) {
+				return;
+			}
+		} else if ( e.keyCode !== undefined && e.keyCode !== 32 ) {
+			return;
+		}
+
+		e.preventDefault();
+
 		/*jshint validthis:true */
 		jQuery( this ).parent().children( '.frm_toggle_container' ).slideToggle( 'fast' );
-		var arrow = jQuery( this ).children( '.frm_arrow_icon' );
+		arrow = jQuery( this ).children( '.frm_arrow_icon' );
 
 		if ( -1 !== this.className.indexOf( 'active' ) ) {
 			this.className = this.className.replace( ' active', '' );
@@ -220,7 +232,10 @@ function frmProFormJS() {
 				jQuery( this.element ).closest( 'form' ).removeClass( 'frm_ajax_submit' );
 			},
 			init: function() {
-				var hidden = field.parent().find( '.dz-hidden-input' );
+				var hidden, mockFileIndex, mockFileData, mockFile;
+
+				hidden = field.parent().find( '.dz-hidden-input' );
+
 				if ( typeof hidden.attr( 'id' ) === 'undefined' ) {
 					hidden.attr( 'id', uploadFields[ i ].label );
 				}
@@ -332,21 +347,23 @@ function frmProFormJS() {
 				});
 
 				if ( typeof uploadFields[ i ].mockFiles !== 'undefined' ) {
-					for ( var f = 0; f < uploadFields[ i ].mockFiles.length; f++ ) {
-						var mockFile = {
-							name: uploadFields[ i ].mockFiles[ f ].name,
-							size: uploadFields[ i ].mockFiles[ f ].size,
-							url: uploadFields[ i ].mockFiles[ f ].file_url,
-							mediaID: uploadFields[ i ].mockFiles[ f ].id,
-							accessible: uploadFields[ i ].mockFiles[ f ].accessible,
-							ext: uploadFields[ i ].mockFiles[ f ].ext,
-							type: uploadFields[ i ].mockFiles[ f ].type
+					for ( mockFileIndex = 0; mockFileIndex < uploadFields[ i ].mockFiles.length; mockFileIndex++ ) {
+						mockFileData = uploadFields[ i ].mockFiles[ mockFileIndex ];
+						mockFile = {
+							name: mockFileData.name,
+							size: mockFileData.size,
+							url: mockFileData.file_url,
+							mediaID: mockFileData.id,
+							accessible: mockFileData.accessible,
+							ext: mockFileData.ext,
+							type: mockFileData.type
 						};
 
 						this.emit( 'addedfile', mockFile );
 						if ( mockFile.accessible && 'string' === typeof mockFile.type && 0 === mockFile.type.indexOf( 'image/' ) ) {
-							this.emit( 'thumbnail', mockFile, mockFile.url );
+							this.emit( 'thumbnail', mockFile, mockFileData.url );
 						}
+
 						this.emit( 'complete', mockFile );
 						this.files.push( mockFile );
 					}
@@ -380,6 +397,7 @@ function frmProFormJS() {
 		'<div class="dz-column">\n' +
 		'<div class="dz-details">\n' +
 		'<div class="dz-filename"><span data-dz-name></span></div>\n' +
+		' ' + // add white space between file name and file size.
 		'<div class="dz-size"><span data-dz-size></span></div>\n' +
 		'<a class="dz-remove frm_icon_font frm_cancel1_icon" href="javascript:undefined;" data-dz-remove title="' + field.remove + '"></a>' +
 		'</div>\n' +
@@ -1443,8 +1461,16 @@ function frmProFormJS() {
 		setValueForInputs( inputs, inContainer, depFieldArgs.formId );
 	}
 
+	/**
+	 * Gets inputs in field on page.
+	 *
+	 * @since 5.4 Accepted HTML element as param.
+	 *
+	 * @param {String|HTMLElement} containerId ID of container or container element.
+	 * @return {Array}
+	 */
 	function getInputsInFieldOnPage( containerId ) {
-		var container = document.getElementById( containerId );
+		var container = 'string' === typeof containerId ? document.getElementById( containerId ) : containerId;
 		return container.querySelectorAll( 'select[name^="item_meta"], textarea[name^="item_meta"], input[name^="item_meta"]' );
 	}
 
@@ -1713,8 +1739,17 @@ function frmProFormJS() {
 		return document.querySelectorAll( '[id^="field_' + depFieldArgs.fieldKey + '-"]' );
 	}
 
-	function clearValueForInputs( inputs, required ) {
-		var prevInput, blankSelect, valueChanged, l, i, input;
+	/**
+	 * Clears value of field inputs.
+	 *
+	 * @since 5.4 Added the third param.
+	 *
+	 * @param {Array}   inputs         Array of inputs.
+	 * @param {String}  required       Required string.
+	 * @param {Boolean} resetToDefault Is `true` if reset to default value. Otherwise, reset to empty value.
+	 */
+	function clearValueForInputs( inputs, required, resetToDefault ) {
+		var prevInput, blankSelect, valueChanged, l, i, input, defaultVal, reset;
 
 		if ( inputs.length < 1 ) {
 			return;
@@ -1725,6 +1760,9 @@ function frmProFormJS() {
 		l = inputs.length;
 		for ( i = 0; i < l; i++ ) {
 			input = inputs[ i ];
+
+			defaultVal = input.getAttribute( 'data-frmval' );
+			reset      = resetToDefault && defaultVal;
 
 			// Don't remove values from some fields.
 			if ( input.className.indexOf( 'frm_dnc' ) > -1 || input.name.indexOf( '[row_ids]' ) > -1 ) {
@@ -1740,13 +1778,25 @@ function frmProFormJS() {
 			valueChanged = true;
 
 			if ( input.type === 'radio' || input.type === 'checkbox' ) {
-				input.checked = false;
-			} else if ( input.tagName === 'SELECT' ) {
-				blankSelect = input.selectedIndex === 0 && input.options[ 0 ].text.trim() === '';
-				if ( blankSelect || ( input.selectedIndex === -1 ) ) {
-					valueChanged = false;
+				if ( ! reset ) {
+					input.checked = false;
+				} else if ( 'radio' === input.type ) {
+					input.checked = defaultVal === input.value;
 				} else {
-					input.selectedIndex = -1;
+					resetCheckboxInputToValue( input, defaultVal );
+				}
+
+				maybeClearStarRatingInput( input );
+			} else if ( input.tagName === 'SELECT' ) {
+				if ( ! reset ) {
+					blankSelect = input.selectedIndex === 0 && input.options[ 0 ].text.trim() === '';
+					if ( blankSelect || ( input.selectedIndex === -1 ) ) {
+						valueChanged = false;
+					} else {
+						input.selectedIndex = -1;
+					}
+				} else {
+					valueChanged = resetSelectInputToValue( input, defaultVal );
 				}
 
 				var chosenId = input.id.replace( /[^\w]/g, '_' ); // match what the script is doing
@@ -1755,11 +1805,20 @@ function frmProFormJS() {
 					jQuery( input ).trigger( 'chosen:updated' );
 				}
 			} else if ( input.type === 'range' ) {
-				input.value = 0;
+				if ( ! reset ) {
+					input.value = 0;
+				} else {
+					input.value = defaultVal;
+				}
 			} else if ( input.getAttribute( 'data-frmprice' ) !== null ) {
 				setHiddenProduct( input );
 			} else {
-				input.value = '';
+				if ( ! reset ) {
+					input.value = '';
+				} else {
+					input.value = defaultVal;
+				}
+
 				if ( null !== input.getAttribute( 'data-frmfile' ) ) {
 					clearDropzoneFiles( input );
 				}
@@ -1777,6 +1836,145 @@ function frmProFormJS() {
 		if ( valueChanged === true ) {
 			triggerChange( jQuery( prevInput ) );
 		}
+	}
+
+	/**
+	 * Maybe clear star rating.
+	 *
+	 * @since 5.4
+	 *
+	 * @param {HTMLElement} input This should be the last input in star rating.
+	 */
+	function maybeClearStarRatingInput( input ) {
+		var starGroup, checkedInput;
+		if ( 'radio' !== input.type || ! input.matches( '.frm-star-group input:last-of-type' ) ) {
+			return;
+		}
+
+		starGroup    = input.closest( '.frm-star-group' );
+		checkedInput = starGroup.querySelector( 'input:checked' );
+		if ( checkedInput ) {
+			updateStars( checkedInput );
+		} else {
+			clearStars( starGroup, true );
+		}
+	}
+
+	/**
+	 * Resets checkbox input to a value.
+	 *
+	 * @since 5.4
+	 *
+	 * @param {HTMLElement} input Checkbox element.
+	 * @param {Object}      val   The value.
+	 */
+	function resetCheckboxInputToValue( input, val ) {
+		var i;
+
+		val = JSON.parse( val );
+		if ( ! val ) {
+			return;
+		}
+
+		for ( i in val ) {
+			if ( val[ i ] === input.value ) {
+				input.checked = true;
+				return;
+			}
+		}
+
+		input.checked = false;
+	}
+
+	/**
+	 * Resets select input to a value.
+	 *
+	 * @since 5.4
+	 *
+	 * @param {HTMLElement}   input Select element.
+	 * @param {String|Object} val   The value. Is object if multiselect.
+	 * @return {Boolean}            Return `true` if value is changed.
+	 */
+	function resetSelectInputToValue( input, val ) {
+		if ( input.multiple ) {
+			return resetMultiSelectInputToValue( input, val );
+		}
+
+		var i,
+			valueChanged = false,
+			options = input.querySelectorAll( 'option' );
+
+		for ( i = 0; i < options.length; i++ ) {
+			if ( val === options[ i ].value && ! options[ i ].selected ) {
+				options[ i ].selected = true;
+				valueChanged = true;
+				continue;
+			}
+
+			if ( val !== options[ i ].value && options[ i ].selected ) {
+				options[ i ].selected = false;
+				valueChanged = true;
+			}
+		}
+
+		return valueChanged;
+	}
+
+	/**
+	 * Resets multiselect input to a value.
+	 *
+	 * @since 5.4
+	 *
+	 * @param {HTMLElement} input Select element.
+	 * @param {Object}      val   The value.
+	 * @return {Boolean}          Return `true` if value is changed.
+	 */
+	function resetMultiSelectInputToValue( input, val ) {
+		val = JSON.parse( val );
+		if ( ! val ) {
+			return false;
+		}
+
+		var i, contained,
+			valueChanged = false,
+			options = input.querySelectorAll( 'option' );
+
+		for ( i = 0; i < options.length; i++ ) {
+			contained = objectContainValue( val, options[ i ].value );
+			if ( contained && ! options[ i ].selected ) {
+				options[ i ].selected = true;
+				valueChanged = true;
+				continue;
+			}
+
+			if ( ! contained && options[ i ].selected ) {
+				options[ i ].selected = false;
+				valueChanged = true;
+			}
+		}
+
+		return valueChanged;
+	}
+
+	/**
+	 * Checks if object contains a value.
+	 *
+	 * @since 5.4
+	 *
+	 * @param {Object} obj Object.
+	 * @param {Mixed}  val Value.
+	 * @return {Boolean}
+	 */
+	function objectContainValue( obj, val ) {
+		var x;
+
+		for ( x in obj ) {
+			if ( obj[ x ] === val ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	function clearDropzoneFiles( hiddenFileIdField ) {
@@ -4336,9 +4534,24 @@ function frmProFormJS() {
 	/** Google Graphs **/
 
 	function generateGoogleGraphs( graphs ) {
-		for ( var i = 0, l = graphs.length; i < l; i++ ) {
+		var l, i;
+		l = graphs.length;
+		for ( i = 0; i < l; i++ ) {
 			generateSingleGoogleGraph( graphs[ i ]);
+
+			if ( 'string' === typeof graphs[ i ].options.width && '%' === graphs[ i ].options.width.substr( -1 ) ) {
+				addResponsiveGraphListener( graphs[ i ]);
+			}
 		}
+	}
+
+	function addResponsiveGraphListener( graphData ) {
+		window.addEventListener(
+			'resize',
+			function() {
+				generateSingleGoogleGraph( graphData );
+			}
+		);
 	}
 
 	function generateSingleGoogleGraph( graphData ) {
@@ -4882,6 +5095,32 @@ function frmProFormJS() {
 				if ( isSelected !== '' ) {
 					stars[ i ].className += isSelected;
 				}
+			}
+		}
+	}
+
+	/**
+	 * Clears star rating.
+	 *
+	 * @since 5.4
+	 *
+	 * @param {HTMLElement} starGroup    Star group element.
+	 * @param {Boolean}     noClearInput Whether to clear input value or not. Default is `false`.
+	 */
+	function clearStars( starGroup, noClearInput ) {
+		var labels, input;
+
+		labels = starGroup.querySelectorAll( '.star-rating-on' );
+		if ( labels && labels.length ) {
+			labels.forEach( function( el ) {
+				el.classList.remove( 'star-rating-on' );
+			});
+		}
+
+		if ( ! noClearInput ) {
+			input = starGroup.querySelector( 'input[type="radio"]:checked' );
+			if ( input ) {
+				input.checked = false;
 			}
 		}
 	}
@@ -5583,10 +5822,6 @@ function frmProFormJS() {
 	 * @since 5.1
 	 */
 	function setAutoHeightForTextArea() {
-		if ( window.NodeList && ! NodeList.prototype.forEach ) {
-			return;
-		}
-
 		document.querySelectorAll( '.frm-show-form textarea' ).forEach(
 			function( element ) {
 				var minHeight, callback;
@@ -5642,9 +5877,16 @@ function frmProFormJS() {
 	}
 
 	/**
+	 * Triggers custom event.
+	 *
 	 * @since 5.1
+	 * @since 5.3.3 Added the third parameter.
+	 *
+	 * @param {HTMLElement} element   Element.
+	 * @param {String}      eventType Event name.
+	 * @param {Object}      data      Data to add to the event.
 	 */
-	function triggerEvent( element, eventType ) {
+	function triggerEvent( element, eventType, data ) {
 		var event;
 
 		if ( typeof window.CustomEvent === 'function' ) {
@@ -5656,16 +5898,219 @@ function frmProFormJS() {
 			return;
 		}
 
+		event.frmData = data;
+
 		element.dispatchEvent( event );
+	}
+
+	/**
+	 * Handles start over button.
+	 *
+	 * @since 5.4
+	 */
+	function startOverButton() {
+		/**
+		 * Gets all field inputs.
+		 *
+		 * @param {HTMLElement} formEl Form element.
+		 * @return {Array}
+		 */
+		function getInputs( formEl ) {
+			return getInputsInFieldOnPage( formEl );
+		}
+
+		/**
+		 * Resets field inputs.
+		 *
+		 * @param {HTMLElement} formEl Form element.
+		 */
+		function resetInputs( formEl ) {
+			document.querySelectorAll( '.frm_repeat_sec:not(:first-of-type)' ).forEach( function( el ) {
+				el.remove();
+			});
+
+			clearValueForInputs( getInputs( formEl ), '', true );
+		}
+
+		/**
+		 * Checks if given form is a multiple pages form.
+		 *
+		 * @param {Number} formId Form Id.
+		 * @return {Boolean}
+		 */
+		function isMultiPagesForm( formId ) {
+			return document.getElementById( 'frm_page_order_' + formId ) || document.querySelector( '#frm_form_' + formId + '_container input[name="frm_next_page"]' );
+		}
+
+		/**
+		 * Reloads form.
+		 *
+		 * @param {Number}      formId Form ID.
+		 * @param {HTMLElement} formEl Form element.
+		 */
+		function reloadForm( formId, formEl ) {
+			formEl.classList.add( 'frm_loading_form' );
+			postToAjaxUrl(
+				formEl,
+				{
+					action: 'frm_load_form',
+					form: formId,
+					_ajax_nonce: frm_js.nonce
+				},
+				function( response ) {
+					if ( ! response.success ) {
+						console.log( response );
+						return;
+					}
+					jQuery( formEl.closest( '.frm_forms' ) ).replaceWith( response.data );
+					triggerCompletedEvent( formId );
+				},
+				function( response ) {
+					console.log( response );
+				}
+			);
+		}
+
+		/**
+		 * Checks if form has Save draft enabled.
+		 *
+		 * @param {HTMLElement} formEl Form element.
+		 * @return {Boolean}
+		 */
+		function hasSaveDraft( formEl ) {
+			return ! ! formEl.querySelector( '.frm_save_draft' );
+		}
+
+		/**
+		 * Deletes draft version.
+		 *
+		 * @param {Number}      formId Form ID.
+		 * @param {HTMLElement} formEl Form element.
+		 */
+		function deleteDraft( formId, formEl ) {
+			postToAjaxUrl(
+				formEl,
+				{
+					action: 'frm_delete_draft_entry',
+					form: formId,
+					_ajax_nonce: frm_js.nonce
+				}
+			);
+		}
+
+		function onClickStartOver( e ) {
+			e.preventDefault();
+
+			var formEl, formId, draftIdInput;
+			formEl = e.target.closest( 'form' );
+			if ( ! formEl ) {
+				return;
+			}
+
+			formId = formEl.querySelector( 'input[name="form_id"]' ).value;
+
+			if ( hasSaveDraft( formEl ) ) {
+				deleteDraft( formId, formEl );
+
+				// Clear draft inputs.
+				draftIdInput = formEl.querySelector( 'input[name="id"]' );
+				if ( draftIdInput ) {
+					draftIdInput.remove();
+				}
+
+				formEl.querySelector( 'input[name="frm_action"]' ).value = 'create';
+			}
+
+			if ( isMultiPagesForm( formId ) ) {
+				reloadForm( formId, formEl );
+			} else {
+				resetInputs( formEl );
+				triggerCompletedEvent( formId );
+			}
+		}
+
+		function triggerCompletedEvent( formId ) {
+			triggerEvent( document, 'frm_after_start_over', { formId: formId });
+		}
+
+		document.addEventListener( 'click', function( e ) {
+			var target;
+
+			// loop parent nodes from the target to the delegation node.
+			for ( target = e.target; target && target != this; target = target.parentNode ) {
+				if ( target.matches( '.frm_start_over' ) ) {
+					onClickStartOver.call( target, e );
+					break;
+				}
+			}
+		}, false );
+	}
+
+	/**
+	 * Maybe add polyfills.
+	 *
+	 * @since 5.4
+	 */
+	function maybeAddPolyfills() {
+		if ( ! Element.prototype.matches ) {
+			// IE9 supports matches but as msMatchesSelector instead.
+			Element.prototype.matches = Element.prototype.msMatchesSelector;
+		}
+
+		if ( ! Element.prototype.closest ) {
+			Element.prototype.closest = function( s ) {
+				var el = this;
+
+				do {
+					if ( el.matches( s ) ) {
+						return el;
+					}
+					el = el.parentElement || el.parentNode;
+				} while ( el !== null && el.nodeType === 1 );
+
+				return null;
+			};
+		}
+
+		// Element.remove().
+		( function( arr ) {
+			arr.forEach( function( item ) {
+				if ( item.hasOwnProperty( 'remove' ) ) {
+					return;
+				}
+				Object.defineProperty( item, 'remove', {
+					configurable: true,
+					enumerable: true,
+					writable: true,
+					value: function remove() {
+						this.parentNode.removeChild( this );
+					}
+				});
+			});
+		}([ Element.prototype, CharacterData.prototype, DocumentType.prototype ]) );
+
+		// NodeList.forEach().
+		if ( window.NodeList && ! NodeList.prototype.forEach ) {
+			NodeList.prototype.forEach = function( callback, thisArg ) {
+				thisArg = thisArg || window;
+				for ( var i = 0; i < this.length; i++ ) {
+					callback.call( thisArg, this[ i ], i, this );
+				}
+			};
+		}
 	}
 
 	return {
 		init: function() {
+			maybeAddPolyfills();
+
 			jQuery( document ).on( 'frmFormComplete', afterFormSubmitted );
 			jQuery( document ).on( 'frmPageChanged', afterPageChanged );
 			jQuery( document ).on( 'frmAfterAddRow frmAfterRemoveRow', calcProductsTotal );
 
 			jQuery( document ).on( 'click', '.frm_trigger', toggleSection );
+			jQuery( document ).on( 'keydown', '.frm_trigger', toggleSection );
+
 			var $blankField = jQuery( '.frm_blank_field' );
 			if ( $blankField.length ) {
 				$blankField.closest( '.frm_toggle_container' ).prev( '.frm_trigger' ).trigger( 'click' );
@@ -5732,6 +6177,8 @@ function frmProFormJS() {
 
 			// make sure this comes last, particularly after checkConditionalLogic & checkFieldsOnPage
 			calcProductsTotal();
+
+			startOverButton();
 		},
 
 		savingDraft: function( object ) {
@@ -5808,19 +6255,22 @@ function frmProFormJS() {
 		},
 
 		loadGoogle: function() {
-			if ( typeof google !== 'undefined' && google && google.load ) {
-				var graphs = __FRMTABLES,
-					packages = Object.keys( graphs );
+			var graphs, packages, i;
 
-				for ( var i = 0; i < packages.length; i++ ) {
-					if ( packages[ i ] === 'graphs' ) {
-						generateGoogleGraphs( graphs[ packages[ i ] ]);
-					} else {
-						generateGoogleTables( graphs[ packages[ i ] ], packages[ i ]);
-					}
+			if ( typeof google === 'undefined' || ! google || ! google.load ) {
+				setTimeout( frmProForm.loadGoogle, 30 );
+				return;
+			}
+
+			graphs = __FRMTABLES;
+			packages = Object.keys( graphs );
+
+			for ( i = 0; i < packages.length; i++ ) {
+				if ( packages[ i ] === 'graphs' ) {
+					generateGoogleGraphs( graphs[ packages[ i ] ]);
+				} else {
+					generateGoogleTables( graphs[ packages[ i ] ], packages[ i ]);
 				}
-			} else {
-				setTimeout( frmFrontForm.loadGoogle, 30 );
 			}
 		},
 

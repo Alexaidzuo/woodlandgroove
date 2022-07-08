@@ -528,7 +528,7 @@ class FrmProFormsController {
     }
 
     public static function replace_shortcodes( $html, $form, $values = array() ) {
-        preg_match_all("/\[(if )?(deletelink|back_label|back_hook|back_button|draft_label|save_draft|draft_hook)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?/s", $html, $shortcodes, PREG_PATTERN_ORDER);
+        preg_match_all("/\[(if )?(deletelink|back_label|back_hook|back_button|draft_label|save_draft|draft_hook|start_over|start_over_label|start_over_hook)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?/s", $html, $shortcodes, PREG_PATTERN_ORDER);
 
 		if ( empty( $shortcodes[0] ) ) {
             return $html;
@@ -574,6 +574,22 @@ class FrmProFormsController {
 					break;
                 case 'draft_hook':
                     $replace_with = apply_filters('frm_draft_button_action', '', $form);
+                    break;
+
+				case 'start_over':
+					if ( empty( $form->options['start_over'] ) ) {
+						unset( $replace_with );
+					} else {
+						$html = str_replace( '[/if start_over]', '', $html );
+					}
+					break;
+
+				case 'start_over_label':
+					$replace_with = esc_html( ! empty( $form->options['start_over_label'] ) ? $form->options['start_over_label'] : __( 'Start Over', 'formidable-pro' ) );
+					break;
+
+				case 'start_over_hook':
+					$replace_with = apply_filters( 'frm_start_over_button_action', '', $form );
             }
 
 			if ( isset( $replace_with ) ) {
@@ -1131,8 +1147,19 @@ class FrmProFormsController {
 	}
 
 	/* Trigger model actions */
-	public static function update_options( $options, $values ) {
-        return FrmProForm::update_options($options, $values);
+
+	/**
+	 * Modifies form options when updating or creating.
+	 *
+	 * @since 5.4 Added the third param.
+	 *
+	 * @param array $options Form options.
+	 * @param array $values  Form data.
+	 * @param bool  $update  Is form updating or creating. Default is `true`: form is updating.
+	 * @return array
+	 */
+	public static function update_options( $options, $values, $update = true ) {
+        return FrmProForm::update_options( $options, $values, $update );
     }
 
 	public static function save_wppost_actions( $settings, $action ) {
@@ -1168,6 +1195,80 @@ class FrmProFormsController {
 	public static function frm_submit_button_html( $button ) {
 		FrmProFieldsHelper::replace_non_standard_formidable_shortcodes( array(), $button );
 		return $button;
+	}
+
+	/**
+	 * Adds options for new form values.
+	 *
+	 * @since 5.4
+	 *
+	 * @param array $values Form values.
+	 * @return array
+	 */
+	public static function add_new_form_values( $values ) {
+		if ( ! isset( $values['options'] ) ) {
+			$values['options'] = array();
+		}
+
+		$values['options']['start_over'] = 1;
+		return $values;
+	}
+
+	/**
+	 * Loads form via AJAX.
+	 *
+	 * @since 5.4
+	 *
+	 * @return void
+	 */
+	public static function load_form_ajax() {
+		check_ajax_referer( 'frm_ajax' );
+
+		$form = FrmAppHelper::get_post_param( 'form', 0, 'intval' );
+		if ( ! $form || ! FrmForm::getOne( $form ) ) {
+			wp_send_json_error();
+		}
+
+		wp_send_json_success( FrmFormsController::show_form( $form ) );
+	}
+
+	/**
+	 * @since 5.3.1
+	 *
+	 * @return string
+	 */
+	public static function list_class() {
+		return 'FrmProFormsListHelper';
+	}
+
+	/**
+	 * Add Application column to forms list table.
+	 *
+	 * @since 5.3.1
+	 *
+	 * @param array<string,string> $columns
+	 * @return array<string,string>
+	 */
+	public static function get_columns( $columns ) {
+		if ( ! is_callable( 'FrmAppHelper::on_form_listing_page' ) || ! FrmAppHelper::on_form_listing_page() ) {
+			return $columns;
+		}
+
+		$keys       = array_keys( $columns );
+		$name_index = array_search( 'name', $keys, true );
+		$key        = 'application';
+		$label      = __( 'Application', 'formidable-pro' );
+
+		if ( false !== $name_index ) {
+			// Place application column after name column.
+			$columns = array_slice( $columns, 0, $name_index + 1, true ) +
+					   array( $key => $label ) +
+					   array_slice( $columns, $name_index, null, true );
+		} else {
+			$columns[ $key ] = $label;
+		}
+
+		return $columns;
 	}
 
 	/**

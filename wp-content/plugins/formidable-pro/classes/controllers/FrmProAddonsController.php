@@ -74,6 +74,7 @@ class FrmProAddonsController extends FrmAddonsController {
 	 * @since 5.0.03 added $force_type parameter.
 	 *
 	 * @param bool $force_type return type instead of checking expiration or code so "expired" or "grandfathered" are never returned.
+	 * @return string
 	 */
 	public static function license_type( $force_type = false ) {
 		$api    = new FrmFormApi();
@@ -81,7 +82,7 @@ class FrmProAddonsController extends FrmAddonsController {
 		$type   = 'free';
 
 		if ( isset( $addons['error'] ) ) {
-			if ( isset( $addons['error']['code'] ) && $addons['error']['code'] === 'expired' ) {
+			if ( ! $force_type && isset( $addons['error']['code'] ) && $addons['error']['code'] === 'expired' ) {
 				return $addons['error']['code'];
 			}
 			$type = isset( $addons['error']['type'] ) ? $addons['error']['type'] : $type;
@@ -115,15 +116,22 @@ class FrmProAddonsController extends FrmAddonsController {
 
 	/**
 	 * @since 5.0.03
+	 *
 	 * @return string "Basic", "Plus", "Business" or "Elite" depending on license type. "Premium" by default if type can not be determined.
 	 */
 	public static function get_readable_license_type() {
 		$license_type = self::license_type( true );
+		if ( 0 === strpos( $license_type, 'views-' ) ) {
+			// Remove "views-" from license type if it exists.
+			$license_type = substr( $license_type, 6 );
+		}
+
 		if ( in_array( $license_type, array( 'personal', 'creator' ), true ) ) {
 			$license_type = 'plus';
 		} elseif ( ! in_array( $license_type, array( 'basic', 'elite', 'business', 'plus' ), true ) ) {
 			$license_type = 'premium';
 		}
+
 		return ucfirst( $license_type );
 	}
 

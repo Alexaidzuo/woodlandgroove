@@ -780,6 +780,40 @@ class FrmProAppHelper {
 	}
 
 	/**
+	 * Include svg images for pro.
+	 *
+	 * @since 5.3
+	 */
+	public static function include_svg() {
+		include_once self::plugin_path() . '/images/icons.svg';
+	}
+
+	/**
+	 * Get the list of capabilities for pro.
+	 *
+	 * @since 5.3.1
+	 *
+	 * @param array<string,string> $permissions
+	 * @return array<string,string>
+	 */
+	public static function add_pro_capabilities( $permissions ) {
+		$permissions['frm_edit_applications']     = __( 'Add/Edit Applications', 'formidable-pro' );
+		$permissions['frm_application_dashboard'] = __( 'Access Application Dashboard', 'formidable-pro' );
+		return $permissions;
+	}
+
+	/**
+	 * Checks if WP Cron is disabled.
+	 *
+	 * @since 5.4.1
+	 *
+	 * @return bool
+	 */
+	public static function is_cron_disabled() {
+		return defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
+	}
+
+	/**
 	 * Let WordPress process the uploads
 	 *
 	 * @codeCoverageIgnore

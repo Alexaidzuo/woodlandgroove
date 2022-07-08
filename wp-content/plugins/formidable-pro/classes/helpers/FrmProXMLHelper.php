@@ -178,6 +178,25 @@ class FrmProXMLHelper {
 		$unmapped_fields = self::get_unmapped_fields( $field_ids );
 		$field_ids       = array_filter( $field_ids );
 
+		/**
+		 * Allows adding fixed meta values.
+		 *
+		 * Some field types might not appear in the CSV file (Example: Likert field), but we need to set the meta value
+		 * for them when importing.
+		 *
+		 * The return value should be an empty array or an array like this:
+		 * array(
+		 *     13 => 'meta value', // 13 is the field ID, this field is outside of Repeater or Embed Form.
+		 *     '13_10' => 'meta value', // 13 is the field ID, 10 is the Repeater or Embed Form ID which that field is inside.
+		 * )
+		 *
+		 * @since 5.4
+		 *
+		 * @param array $fixed_meta_values Fixed meta values.
+		 * @param array $args              Contains `form_id`.
+		 */
+		$fixed_meta_values = apply_filters( 'frm_pro_csv_import_fixed_meta_values', array(), compact( 'form_id' ) );
+
 		self::check_csv_filename_for_legacy_format( $path );
 
 		$f = fopen( $path, 'r' );
@@ -202,10 +221,13 @@ class FrmProXMLHelper {
 					unset( $key, $field_id );
 				}
 
+				self::maybe_add_fixed_meta_values( $fixed_meta_values, $values );
 				self::convert_db_cols( $values );
 				self::convert_timestamps( $values );
 				self::save_or_edit_entry( $values, $unmapped_fields );
+
 				unset( $_POST, $values );
+				$_POST['form_id'] = $form_id; // $form_id is set from $_POST['form_id'], so set it back again after the unset line above.
 
 				if ( ( $row - $start_row ) >= $max ) {
 					fclose($f);
@@ -215,6 +237,42 @@ class FrmProXMLHelper {
 
 			fclose($f);
 			return $row;
+		}
+	}
+
+	/**
+	 * Maybe add fixed meta values to entry meta.
+	 *
+	 * @since 5.4.1
+	 *
+	 * @param array $fixed_meta_values Fixed meta values.
+	 * @param array $values            Entry data.
+	 */
+	private static function maybe_add_fixed_meta_values( $fixed_meta_values, &$values ) {
+		if ( ! $fixed_meta_values ) {
+			return;
+		}
+
+		foreach ( $fixed_meta_values as $fixed_meta_field => $fixed_meta_value ) {
+			if ( is_numeric( $fixed_meta_field ) ) {
+				$values['item_meta'][ $fixed_meta_field ] = $fixed_meta_value;
+				continue;
+			}
+
+			list( $field_id, $section_id ) = explode( '_', $fixed_meta_field );
+
+			foreach ( $values['item_meta'] as $meta_field => $meta_value ) {
+				if ( intval( $meta_field ) !== intval( $section_id ) || ! is_array( $meta_value ) ) {
+					continue;
+				}
+
+				foreach ( $meta_value as $key => $value ) {
+					if ( ! is_numeric( $key ) || ! is_array( $value ) ) {
+						continue;
+					}
+					$values['item_meta'][ $meta_field ][ $key ][ $field_id ] = $fixed_meta_value;
+				}
+			}
 		}
 	}
 
@@ -292,7 +350,18 @@ class FrmProXMLHelper {
 	 * Called by self::csv_to_entry_value
 	 */
 	private static function set_values_for_fields( $key, $field_id, $data, &$values ) {
-		$field      = self::get_field( $field_id );
+		$field = self::get_field( $field_id );
+
+		/**
+		 * Allows modifying field to be imported.
+		 *
+		 * @since 5.4
+		 *
+		 * @param object $field Field object.
+		 * @param array  $args  Contains `field_id`.
+		 */
+		$field = apply_filters( 'frm_pro_get_field_for_import', $field, compact( 'field_id' ) );
+
 		$section_id = self::check_field_for_section_id( $field );
 
 		$values['item_meta'][ $field_id ] = apply_filters( 'frm_import_val', $data[ $key ], $field );
@@ -361,7 +430,15 @@ class FrmProXMLHelper {
 		$_POST['item_meta'][ $section_id ] = $values['item_meta'][ $section_id ];
 	}
 
-	private static function get_field( $field_id ) {
+	/**
+	 * Gets field for import.
+	 *
+	 * @since 5.4 This method is public.
+	 *
+	 * @param int $field_id Field ID.
+	 * @return object|null|false
+	 */
+	public static function get_field( $field_id ) {
 		global $importing_fields;
 
 		if ( ! $importing_fields ) {

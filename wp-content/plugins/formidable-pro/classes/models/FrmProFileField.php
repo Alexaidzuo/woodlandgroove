@@ -170,7 +170,7 @@ class FrmProFileField {
 	 * @param int $media_id
 	 * @return array
 	 */
-	private static function get_mock_file( $media_id ) {
+	public static function get_mock_file( $media_id ) {
 		$file_url  = self::get_file_url( $media_id );
 		$path      = get_attached_file( $media_id );
 		$file_type = wp_check_filetype( $path );
@@ -189,6 +189,30 @@ class FrmProFileField {
 		}
 
 		return $file;
+	}
+
+	/**
+	 * Get path to use for file that checks for permissions first before trying to show files the user cannot access.
+	 *
+	 * @since 5.4.1
+	 *
+	 * @param array $file Mock file data.
+	 * @return string
+	 */
+	public static function get_safe_file_icon( $file ) {
+		if ( ! empty( $file['accessible'] ) && self::file_type_matches_image( $file['type'] ) ) {
+			return $file['url'];
+		}
+
+		// Use a placeholder for type instead.
+		$images_url = FrmProAppHelper::plugin_url() . '/images/';
+
+		if ( in_array( $file['ext'], array( 'pdf', 'doc', 'xls', 'docx', 'xlsx' ), true ) ) {
+			$ext = substr( $file['ext'], 0, 3 );
+			return $images_url . $ext . '.svg';
+		}
+
+		return $images_url . 'doc.svg';
 	}
 
 	/**

@@ -50,6 +50,10 @@ class FrmViewsHooksController {
 		add_filter( 'frm_export_csv_table_heading', 'FrmViewsEditorController::add_table_view_headers_to_csv', 10, 2 );
 
 		add_action( 'elementor/widgets/widgets_registered', 'FrmViewsHooksController::register_elementor_hooks' );
+
+		// AJAX Pagination
+		add_filter( 'frm_before_display_content', 'FrmViewsPaginationController::before_display_content', 10, 3 );
+		add_filter( 'frm_after_display_content', 'FrmViewsPaginationController::after_display_content', 10, 3 );
 	}
 
 	public static function load_admin_hooks() {
@@ -80,6 +84,18 @@ class FrmViewsHooksController {
 		add_filter( 'frm_popup_shortcodes', 'FrmViewsDisplaysController::popup_shortcodes', 9 );
 		add_filter( 'get_the_excerpt', 'FrmViewsDisplaysController::use_first_box_for_excerpt_for_grid', 1, 2 );
 
+		// Settings
+		add_filter( 'frm_add_settings_section', 'FrmViewsSettingsController::add_settings_section', 1 );
+		add_action( 'frm_update_settings', 'FrmViewsSettingsController::update' );
+		add_action( 'frm_store_settings', 'FrmViewsSettingsController::store' );
+
+		// Embed
+		add_filter( 'frm_create_page_with_view_shortcode_content', 'FrmViewsAppController::get_page_shortcode_content', 1, 2 );
+
+		// Applications
+		add_action( 'frm_application_pre_edit_form', 'FrmViewsApplicationsController::pre_edit_form', 1 );
+		add_filter( 'frm_application_term_icons', 'FrmViewsApplicationsController::add_views_icons_for_application_term_page', 1 );
+
 		if ( FrmViewsAppHelper::view_editor_is_active() ) {
 			add_filter( 'admin_body_class', 'FrmViewsEditorController::add_view_editor_body_class' );
 		}
@@ -96,6 +112,11 @@ class FrmViewsHooksController {
 		add_action( 'wp_ajax_frm_add_where_row', 'FrmViewsDisplaysController::get_where_row' );
 		add_action( 'wp_ajax_frm_add_where_options', 'FrmViewsDisplaysController::get_where_options' );
 		add_action( 'wp_ajax_frm_display_get_content', 'FrmViewsDisplaysController::get_post_content' );
+
+		// AJAX Pagination
+		add_action( 'wp_ajax_frm_views_load_page', 'FrmViewsPaginationController::load_page' );
+		add_action( 'wp_ajax_nopriv_frm_views_load_page', 'FrmViewsPaginationController::load_page' );
+
 		self::load_editor_ajax_hooks();
 	}
 

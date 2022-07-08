@@ -6,7 +6,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class FrmProForm {
 
-	public static function update_options( $options, $values ) {
+	/**
+	 * Modifies form options when updating or creating.
+	 *
+	 * @since 5.4 Added the third param.
+	 *
+	 * @param array $options Form options.
+	 * @param array $values  Form data.
+	 * @param bool  $update  Is form updating or creating. It's `true` if is updating.
+	 * @return array
+	 */
+	public static function update_options( $options, $values, $update = false ) {
 		self::fill_option_defaults( $options, $values );
 
 		if ( isset( $values['id'] ) ) {
@@ -39,7 +49,27 @@ class FrmProForm {
 			$options['copy'] = isset( $values['options']['copy'] ) ? $values['options']['copy'] : 0;
 		}
 
+		if ( $update ) {
+			self::maybe_add_start_over_shortcode( $options );
+		}
+
 		return $options;
+	}
+
+	/**
+	 * Maybe add start over button shortcode to the Submit button setting if it's missing.
+	 *
+	 * @since 5.4
+	 *
+	 * @param array $options Form options.
+	 */
+	private static function maybe_add_start_over_shortcode( &$options ) {
+		if ( empty( $options['start_over'] ) || false !== strpos( $options['submit_html'], '[if start_over]' ) ) {
+			return;
+		}
+
+		$start_over_shortcode   = FrmFormsHelper::get_start_over_shortcode();
+		$options['submit_html'] = preg_replace( '~\<\/div\>(?!.*\<\/div\>)~', $start_over_shortcode . "\r\n</div>", $options['submit_html'] );
 	}
 
 	/**

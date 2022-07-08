@@ -161,11 +161,22 @@ class FrmProSummaryValues {
 		foreach ( $value['row_ids'] as $v ) {
 			$child_entry = $this->base_entry( $form_id );
 			foreach ( $value[ $v ] as $child_field => $child_value ) {
-				if ( $child_field === 0 || $this->is_excluded_type( FrmField::getOne( $child_field ) ) ) {
+				if ( $child_field === 0 ) {
 					continue;
 				}
 
-				$child_entry->metas[ $child_field ] = $child_value;
+				$child_field = FrmField::getOne( $child_field );
+				if ( ! $child_field ) {
+					continue;
+				}
+
+				$child_field->temp_id = $child_field->id . '-' . $field_value->get_field_id() . '-' . $v;
+				if ( $this->is_excluded_type( $child_field ) ) {
+					continue;
+				}
+
+				$child_entry->metas[ $child_field->id ] = $child_value;
+				unset( $child_field, $child_value );
 			}
 			$children[ $v ] = $child_entry;
 		}

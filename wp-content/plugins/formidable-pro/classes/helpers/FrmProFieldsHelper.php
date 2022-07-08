@@ -166,6 +166,15 @@ class FrmProFieldsHelper {
 
 	/**
 	 * @since 2.0.8
+	 *
+	 * @param mixed $value
+	 * @param array $args {
+	 *     @type stdClass $field
+	 *     @type bool     $allow_array
+	 *     @type string   $shortcode
+	 *     @type int      $match_key
+	 * }
+	 * @return void
 	 */
 	private static function replace_shortcode_in_string( &$value, $args ) {
 		$shortcode_functions = self::get_shortcode_to_functions();
@@ -176,12 +185,12 @@ class FrmProFieldsHelper {
 			$new_value = self::get_other_shortcode_values( $args );
 		}
 
-		if ( $args['shortcode'] == 'if get' ) {
+		if ( $args['shortcode'] === 'if get' ) {
 			$args['new_value'] = $new_value;
 			self::do_conditional_get( $args, $value );
 		} elseif ( is_array( $new_value ) ) {
-			if ( count($new_value) === 1 ) {
-				$new_value = reset($new_value);
+			if ( 1 === count( $new_value ) && ! FrmField::is_field_with_multiple_values( $args['field'] ) ) {
+				$new_value = reset( $new_value );
 			}
 			$value = $new_value;
 		} else {
@@ -320,15 +329,19 @@ class FrmProFieldsHelper {
 
 	/**
 	 * @since 2.0.8
+	 *
+	 * @param array $args
+	 * @return int
 	 */
 	private static function do_auto_id_shortcode( $args ) {
 		$last_entry = FrmProEntryMetaHelper::get_max( $args['field'] );
-		$start = isset( $args['shortcode_atts']['start'] ) ? absint( $args['shortcode_atts']['start'] ) : false;
+		$start      = isset( $args['shortcode_atts']['start'] ) ? absint( $args['shortcode_atts']['start'] ) : false;
 
-		if ( ! $last_entry && $start !== false ) {
-			$new_value = $start;
+		if ( ! $last_entry ) {
+			$new_value = false === $start ? 1 : $start;
 		} else {
-			$new_value = max( $start, absint( $last_entry ) + 1 );
+			$step      = isset( $args['shortcode_atts']['step'] ) ? absint( $args['shortcode_atts']['step'] ) : 1;
+			$new_value = max( $start, absint( $last_entry ) + $step );
 		}
 
 		return $new_value;
@@ -910,6 +923,7 @@ class FrmProFieldsHelper {
 			'taxonomy'                  => 'category',
 			'exclude_cat'               => 0,
 			'read_only'                 => 0,
+			'autocomplete'              => '',
 			'admin_only'                => '',
 			'unique'                    => 0,
 			'unique_msg'                => $frm_settings->unique_msg,
@@ -3624,7 +3638,7 @@ class FrmProFieldsHelper {
 	 */
 	private static function hidden_html_id( $field, $opt_key, &$html_id ) {
 		$html_id_end = $opt_key;
-		if ( $opt_key === false && isset( $field['original_type'] ) && in_array( $field['original_type'], array( 'radio', 'checkbox', 'scale', 'star' ) ) ) {
+		if ( $opt_key === false && isset( $field['original_type'] ) && in_array( $field['original_type'], FrmProFormsHelper::radio_similar_field_types(), true ) ) {
 			$html_id_end = 0;
 		}
 
@@ -3745,14 +3759,24 @@ class FrmProFieldsHelper {
 		return $section;
 	}
 
+	/**
+	 * Checks if given field should be on the current page.
+	 *
+	 * @since 5.4.1 The parameter can be field object, field array (after setup), field ID or field key.
+	 *
+	 * @param object|array|int|string $field Field object, field array, ID or field key.
+	 * @return bool
+	 */
 	public static function field_on_current_page( $field ) {
 		global $frm_vars;
 		$current = true;
 
 		$prev = 0;
 		$next = 9999;
-		if ( ! is_object($field) ) {
-			$field = FrmField::getOne($field);
+		if ( is_array( $field ) ) {
+			$field = (object) $field;
+		} elseif ( ! is_object( $field ) ) {
+			$field = FrmField::getOne( $field );
 		}
 
 		if ( $frm_vars['prev_page'] && is_array( $frm_vars['prev_page'] ) && isset($frm_vars['prev_page'][ $field->form_id ] ) ) {
@@ -3770,7 +3794,7 @@ class FrmProFieldsHelper {
 			$current = false;
 		}
 
-		$current = apply_filters('frm_show_field_on_page', $current, $field);
+		$current = apply_filters( 'frm_show_field_on_page', $current, $field );
 		return $current;
 	}
 
@@ -3983,6 +4007,51 @@ class FrmProFieldsHelper {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @since 5.4.1
+	 *
+	 * @return array<string,string>
+	 */
+	public static function get_autocomplete_options() {
+		return array(
+			'additional-name'      => __( 'Additional name', 'formidable-pro' ),
+			'bday'                 => __( 'Birthday', 'formidable-pro' ),
+			'bday-day'             => __( 'Birthday day', 'formidable-pro' ),
+			'bday-month'           => __( 'Birthday month', 'formidable-pro' ),
+			'bday-year'            => __( 'Birthday year', 'formidable-pro' ),
+			'country'              => __( 'Country', 'formidable-pro' ),
+			'country-name'         => __( 'Country name', 'formidable-pro' ),
+			'current-password'     => __( 'Current password', 'formidable-pro' ),
+			'email'                => __( 'Email', 'formidable-pro' ),
+			'family-name'          => __( 'Family name', 'formidable-pro' ),
+			'given-name'           => __( 'Given name', 'formidable-pro' ),
+			'honorific-prefix'     => __( 'Honoric prefix', 'formidable-pro' ),
+			'honorific-suffix'     => __( 'Honoric suffix', 'formidable-pro' ),
+			'impp'                 => __( 'IMPP', 'formidable-pro' ),
+			'language'             => __( 'Language', 'formidable-pro' ),
+			'name'                 => __( 'Name', 'formidable-pro' ),
+			'new-password'         => __( 'New password', 'formidable-pro' ),
+			'off'                  => __( 'Off', 'formidable-pro' ),
+			'on'                   => __( 'On', 'formidable-pro' ),
+			'one-time-code'        => __( 'One time code', 'formidable-pro' ),
+			'organization'         => __( 'Organization', 'formidable-pro' ),
+			'organization-title'   => __( 'Organization title', 'formidable-pro' ),
+			'photo'                => __( 'Photo', 'formidable-pro' ),
+			'sex'                  => __( 'Sex', 'formidable-pro' ),
+			'street-address'       => __( 'Street address', 'formidable-pro' ),
+			'tel'                  => __( 'Tel', 'formidable-pro' ),
+			'tel-area-code'        => __( 'Tel area code', 'formidable-pro' ),
+			'tel-country-code'     => __( 'Tel country code', 'formidable-pro' ),
+			'tel-extension'        => __( 'Tel extension', 'formidable-pro' ),
+			'tel-local'            => __( 'Tel local', 'formidable-pro' ),
+			'tel-national'         => __( 'Tel national', 'formidable-pro' ),
+			'transaction-amount'   => __( 'Transaction amount', 'formidable-pro' ),
+			'transaction-currency' => __( 'Transaction currency', 'formidable-pro' ),
+			'url'                  => __( 'URL', 'formidable-pro' ),
+			'username'             => __( 'Username', 'formidable-pro' ),
+		);
 	}
 
 	/**

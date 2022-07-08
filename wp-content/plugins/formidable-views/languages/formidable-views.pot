@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Formidable Visual Views plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Formidable Visual Views 5.1.05\n"
+"Project-Id-Version: Formidable Visual Views 5.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/formidable-views\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-02-23T16:58:39+00:00\n"
+"POT-Creation-Date: 2022-06-22T16:51:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: formidable-views\n"
@@ -24,24 +24,25 @@ msgid "https://formidableforms.com/"
 msgstr ""
 
 #. Description of the plugin
-msgid "Add the power of views to your Formidable Forms to display your form submissions in listings, tables, calendars, and more."
+msgid "Add the power of views to Formidable Forms to display form submissions in listings, tables, calendars, and more."
 msgstr ""
 
 #. Author of the plugin
 msgid "Strategy11"
 msgstr ""
 
-#: classes/controllers/FrmViewsAppController.php:81
+#: classes/controllers/FrmViewsAppController.php:82
 msgid "%s View"
 msgstr ""
 
-#: classes/controllers/FrmViewsAppController.php:92
+#: classes/controllers/FrmViewsAppController.php:93
 #: classes/controllers/FrmViewsDisplaysController.php:25
 #: classes/controllers/FrmViewsDisplaysController.php:46
 #: classes/controllers/FrmViewsDisplaysController.php:62
 #: classes/controllers/FrmViewsDisplaysController.php:63
 #: classes/controllers/FrmViewsDisplaysController.php:176
 #: classes/controllers/FrmViewsDisplaysController.php:249
+#: classes/helpers/FrmViewsAppHelper.php:315
 #: classes/views/editor/header_view_editor_publish_wrapper.php:16
 #: classes/widgets/FrmViewsElementorWidget.php:14
 msgid "Views"
@@ -49,7 +50,7 @@ msgstr ""
 
 #: classes/controllers/FrmViewsDisplaysController.php:47
 #: classes/controllers/FrmViewsDisplaysController.php:48
-#: classes/controllers/FrmViewsDisplaysController.php:3004
+#: classes/controllers/FrmViewsDisplaysController.php:3018
 #: classes/views/displays/submitbox_actions.php:9
 #: classes/views/editor/publish_button.php:11
 #: classes/widgets/FrmViewsElementorWidget.php:40
@@ -106,7 +107,7 @@ msgid "Add New"
 msgstr ""
 
 #: classes/controllers/FrmViewsDisplaysController.php:273
-#: js/editor.js:4418
+#: js/editor.js:4577
 msgid "Duplicate"
 msgstr ""
 
@@ -114,223 +115,200 @@ msgstr ""
 msgid "View Title"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:296
-#: classes/controllers/FrmViewsDisplaysController.php:473
+#: classes/controllers/FrmViewsDisplaysController.php:302
+#: classes/controllers/FrmViewsDisplaysController.php:472
 msgid "Description"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:297
+#: classes/controllers/FrmViewsDisplaysController.php:303
 msgid "Form"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:298
+#: classes/controllers/FrmViewsDisplaysController.php:304
 msgid "View Type"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:299
-#: classes/controllers/FrmViewsDisplaysController.php:472
+#: classes/controllers/FrmViewsDisplaysController.php:305
+#: classes/controllers/FrmViewsDisplaysController.php:471
 #: classes/views/displays/mb_dyncontent.php:50
 #: classes/views/editor/wysiwyg.php:6
 msgid "Content"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:300
+#: classes/controllers/FrmViewsDisplaysController.php:306
 #: classes/views/displays/mb_dyncontent.php:81
 msgid "Dynamic Content"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:301
+#: classes/controllers/FrmViewsDisplaysController.php:307
 msgid "Date"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:302
+#: classes/controllers/FrmViewsDisplaysController.php:308
 #: classes/views/displays/mb_advanced.php:117
 msgid "Key"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:303
+#: classes/controllers/FrmViewsDisplaysController.php:309
 msgid "Former ID"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:304
+#: classes/controllers/FrmViewsDisplaysController.php:310
 msgid "Shortcode"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:347
+#: classes/controllers/FrmViewsDisplaysController.php:353
 msgid "N/A"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:364
-#: js/editor.js:2379
-#: js/index.js:127
-msgid "Calendar"
-msgstr ""
-
-#: classes/controllers/FrmViewsDisplaysController.php:368
-#: js/editor.js:1118
-#: js/index.js:123
-msgid "Grid"
-msgstr ""
-
-#: classes/controllers/FrmViewsDisplaysController.php:370
-#: js/index.js:131
-msgid "Table"
-msgstr ""
-
-#: classes/controllers/FrmViewsDisplaysController.php:372
-#: js/editor.js:2316
-#: js/index.js:119
-msgid "Classic"
-msgstr ""
-
-#: classes/controllers/FrmViewsDisplaysController.php:471
+#: classes/controllers/FrmViewsDisplaysController.php:470
 msgid "Basic Settings"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:474
-#: js/editor.js:860
+#: classes/controllers/FrmViewsDisplaysController.php:473
+#: js/editor.js:863
 msgid "Advanced Settings"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:475
+#: classes/controllers/FrmViewsDisplaysController.php:474
 msgid "Customization"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "day"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "days"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "daily"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "week"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "weeks"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "weekly"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "month"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "months"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "monthly"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "year"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "years"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:968
+#: classes/controllers/FrmViewsDisplaysController.php:967
 msgid "yearly"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:1111
+#: classes/controllers/FrmViewsDisplaysController.php:1112
 msgid "There are no views with that ID"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2951
+#: classes/controllers/FrmViewsDisplaysController.php:2965
 msgid "Select a view:"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2963
+#: classes/controllers/FrmViewsDisplaysController.php:2977
 msgid "Filter shortcodes within the view content"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2967
+#: classes/controllers/FrmViewsDisplaysController.php:2981
 #: classes/views/displays/mb_advanced.php:12
-#: js/editor.js:2012
+#: js/editor.js:2065
 msgid "Limit"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2972
+#: classes/controllers/FrmViewsDisplaysController.php:2986
 msgid "Page size"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2977
+#: classes/controllers/FrmViewsDisplaysController.php:2991
 msgid "Entry order"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2980
-#: js/editor.js:1431
+#: classes/controllers/FrmViewsDisplaysController.php:2994
+#: js/editor.js:1484
 msgid "Default"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2981
+#: classes/controllers/FrmViewsDisplaysController.php:2995
 #: classes/views/displays/order_row.php:32
-#: js/editor.js:3362
+#: js/editor.js:3521
 msgid "Ascending"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2982
+#: classes/controllers/FrmViewsDisplaysController.php:2996
 #: classes/views/displays/order_row.php:35
-#: js/editor.js:3363
+#: js/editor.js:3522
 msgid "Descending"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2987
+#: classes/controllers/FrmViewsDisplaysController.php:3001
 msgid "Include draft entries"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2990
+#: classes/controllers/FrmViewsDisplaysController.php:3004
 msgid "No draft entries"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2991
+#: classes/controllers/FrmViewsDisplaysController.php:3005
 msgid "Only draft entries"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:2992
+#: classes/controllers/FrmViewsDisplaysController.php:3006
 msgid "All entries"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:3005
+#: classes/controllers/FrmViewsDisplaysController.php:3019
 msgid "Insert a View"
 msgstr ""
 
-#: classes/controllers/FrmViewsDisplaysController.php:3029
+#: classes/controllers/FrmViewsDisplaysController.php:3043
 msgid "Use Settings from View"
 msgstr ""
 
-#: classes/controllers/FrmViewsEditorController.php:1335
+#: classes/controllers/FrmViewsEditorController.php:1379
 #: classes/views/displays/where_options.php:24
 msgid "Draft or complete entry"
 msgstr ""
 
-#: classes/controllers/FrmViewsEditorController.php:1336
+#: classes/controllers/FrmViewsEditorController.php:1380
 #: classes/views/displays/where_options.php:30
 msgid "Complete entry"
 msgstr ""
 
-#: classes/controllers/FrmViewsEditorController.php:1337
+#: classes/controllers/FrmViewsEditorController.php:1381
 #: classes/views/displays/where_options.php:27
 msgid "Draft"
 msgstr ""
 
-#: classes/helpers/FrmViewsAppHelper.php:322
+#: classes/helpers/FrmViewsAppHelper.php:374
 msgid "Previous Page"
 msgstr ""
 
-#: classes/helpers/FrmViewsAppHelper.php:326
+#: classes/helpers/FrmViewsAppHelper.php:378
 msgid "Next Page"
 msgstr ""
 
@@ -338,115 +316,142 @@ msgstr ""
 msgid "No Entries Found"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:149
+#: classes/helpers/FrmViewsDisplaysHelper.php:150
 msgid "equal to"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:150
+#: classes/helpers/FrmViewsDisplaysHelper.php:151
 msgid "NOT equal to"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:151
-#: js/editor.js:3147
+#: classes/helpers/FrmViewsDisplaysHelper.php:152
+#: js/editor.js:3306
 msgid "greater than"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:152
-#: js/editor.js:3148
+#: classes/helpers/FrmViewsDisplaysHelper.php:153
+#: js/editor.js:3307
 msgid "less than"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:153
-#: js/editor.js:3149
+#: classes/helpers/FrmViewsDisplaysHelper.php:154
+#: js/editor.js:3308
 msgid "greater than or equal to"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:154
-#: js/editor.js:3150
+#: classes/helpers/FrmViewsDisplaysHelper.php:155
+#: js/editor.js:3309
 msgid "less than or equal to"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:155
-#: js/editor.js:3151
+#: classes/helpers/FrmViewsDisplaysHelper.php:156
+#: js/editor.js:3310
 msgid "like"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:156
-#: js/editor.js:3152
+#: classes/helpers/FrmViewsDisplaysHelper.php:157
+#: js/editor.js:3311
 msgid "NOT like"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:157
-#: js/editor.js:3153
+#: classes/helpers/FrmViewsDisplaysHelper.php:158
+#: js/editor.js:3312
 msgid "starts with"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:158
-#: js/editor.js:3154
+#: classes/helpers/FrmViewsDisplaysHelper.php:159
+#: js/editor.js:3313
 msgid "ends with"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:159
-#: js/editor.js:3155
+#: classes/helpers/FrmViewsDisplaysHelper.php:160
+#: js/editor.js:3314
 msgid "unique (get oldest entries)"
 msgstr ""
 
-#: classes/helpers/FrmViewsDisplaysHelper.php:160
-#: js/editor.js:3156
+#: classes/helpers/FrmViewsDisplaysHelper.php:161
+#: js/editor.js:3315
 msgid "unique (get newest entries)"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:126
+#: classes/helpers/FrmViewsDisplaysHelper.php:380
+#: js/editor.js:2452
+#: js/index.js:152
+msgid "Calendar"
+msgstr ""
+
+#: classes/helpers/FrmViewsDisplaysHelper.php:382
+#: js/editor.js:1171
+#: js/index.js:148
+msgid "Grid"
+msgstr ""
+
+#: classes/helpers/FrmViewsDisplaysHelper.php:384
+#: js/index.js:156
+msgid "Table"
+msgstr ""
+
+#: classes/helpers/FrmViewsDisplaysHelper.php:387
+#: js/editor.js:2389
+#: js/index.js:160
+msgid "Classic"
+msgstr ""
+
+#: classes/models/FrmViewsDisplay.php:128
 #: classes/views/calendars/_calendar_options.php:9
 #: classes/views/calendars/_calendar_options.php:26
 #: classes/views/displays/order_row.php:15
 #: classes/views/displays/where_row.php:10
 #: classes/views/editor/field_select_template_options.php:8
-#: js/editor.js:1194
+#: js/editor.js:1247
 msgid "Entry creation date"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:128
+#: classes/models/FrmViewsDisplay.php:130
 #: classes/views/displays/where_row.php:13
 #: classes/views/editor/field_select_template_options.php:11
 msgid "Entry updated date"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:130
+#: classes/models/FrmViewsDisplay.php:132
 #: classes/views/displays/order_row.php:9
 #: classes/views/displays/where_row.php:16
 #: classes/views/editor/field_select_template_options.php:14
 msgid "Entry ID"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:132
+#: classes/models/FrmViewsDisplay.php:134
 #: classes/views/displays/where_row.php:19
 #: classes/views/editor/field_select_template_options.php:17
 msgid "Entry key"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:134
+#: classes/models/FrmViewsDisplay.php:136
 #: classes/views/displays/where_row.php:22
 #: classes/views/editor/field_select_template_options.php:20
 msgid "Post ID"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:136
+#: classes/models/FrmViewsDisplay.php:138
 msgid "Parent Entry ID"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:138
+#: classes/models/FrmViewsDisplay.php:140
 #: classes/views/displays/where_row.php:28
 #: classes/views/editor/field_select_template_options.php:26
 msgid "Entry status"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:540
+#: classes/models/FrmViewsDisplay.php:542
 msgid "Single Post"
 msgstr ""
 
-#: classes/models/FrmViewsDisplay.php:548
+#: classes/models/FrmViewsDisplay.php:550
 msgid "Used for the single post page"
+msgstr ""
+
+#: classes/models/FrmViewsSettings.php:27
+msgid "Load More"
 msgstr ""
 
 #: classes/views/actions/post_options.php:7
@@ -461,7 +466,7 @@ msgid "&mdash; Select &mdash;"
 msgstr ""
 
 #: classes/views/actions/post_options.php:10
-#: js/index.js:30
+#: js/index.js:45
 msgid "Create new view"
 msgstr ""
 
@@ -470,31 +475,31 @@ msgid "Customize Content"
 msgstr ""
 
 #: classes/views/actions/post_options.php:27
-msgid "The content shown on your single post page. If nothing is entered here, the regular post content will be used."
+msgid "The content shown on the single post page. If nothing is entered here, the regular post content will be used."
 msgstr ""
 
 #: classes/views/actions/post_options.php:38
-msgid "Add text, HTML, and fields from your form to build your post content."
+msgid "Add text, HTML, and fields from a form to build the post content."
 msgstr ""
 
 #: classes/views/actions/post_options.php:45
-msgid "Editing this box will update your existing view or create a new one."
+msgid "Editing this box will update the existing view or create a new one."
 msgstr ""
 
 #: classes/views/calendars/_calendar_options.php:6
-#: js/editor.js:909
+#: js/editor.js:962
 msgid "Event Date"
 msgstr ""
 
 #: classes/views/calendars/_calendar_options.php:12
 #: classes/views/calendars/_calendar_options.php:29
 #: classes/views/displays/order_row.php:18
-#: js/editor.js:1197
+#: js/editor.js:1250
 msgid "Entry update date"
 msgstr ""
 
 #: classes/views/calendars/_calendar_options.php:22
-#: js/editor.js:924
+#: js/editor.js:977
 msgid "End Date or Day Count"
 msgstr ""
 
@@ -503,42 +508,41 @@ msgid "No multi-day events"
 msgstr ""
 
 #: classes/views/calendars/_calendar_options.php:40
-#: js/editor.js:959
+#: js/editor.js:1012
 msgid "Repeat"
 msgstr ""
 
 #: classes/views/calendars/_calendar_options.php:41
-#: js/editor.js:976
-msgid "Select a field from your form that contains values like 1 week, 2 weeks, 1 year, etc. This will set the repeat period for each event."
+msgid "Select a field from the form that contains values like 1 week, 2 weeks, 1 year, etc. This will set the repeat period for each event."
 msgstr ""
 
 #: classes/views/calendars/_calendar_options.php:44
-#: js/editor.js:1026
+#: js/editor.js:1079
 msgid "No repeating events"
 msgstr ""
 
 #: classes/views/calendars/_calendar_options.php:53
-#: js/editor.js:980
+#: js/editor.js:1033
 msgid "End Repeat"
 msgstr ""
 
 #: classes/views/calendars/_calendar_options.php:55
-#: js/editor.js:1034
+#: js/editor.js:1087
 msgid "Never"
 msgstr ""
 
 #: classes/views/displays/mb_advanced.php:13
-#: js/editor.js:2020
-msgid "If you don’t want all your entries displayed, you can insert the number limit here. Leave blank if you’d like all entries shown."
+#: js/editor.js:2073
+msgid "If you don’t want all form entries displayed, you can insert the number limit here. Leave blank if you’d like all entries shown."
 msgstr ""
 
 #: classes/views/displays/mb_advanced.php:21
-#: js/editor.js:2030
+#: js/editor.js:2083
 msgid "Page Size"
 msgstr ""
 
 #: classes/views/displays/mb_advanced.php:22
-#: js/editor.js:2038
+#: js/editor.js:2096
 msgid "The number of entries to show per page. Leave blank to not use pagination."
 msgstr ""
 
@@ -564,7 +568,7 @@ msgid "Narrow down which entries will be used. The Unique options uses SQL GROUP
 msgstr ""
 
 #: classes/views/displays/mb_advanced.php:79
-#: js/editor.js:741
+#: js/editor.js:743
 msgid "No Entries Message"
 msgstr ""
 
@@ -573,17 +577,17 @@ msgid "Advanced"
 msgstr ""
 
 #: classes/views/displays/mb_advanced.php:92
-#: js/editor.js:766
+#: js/editor.js:768
 msgid "View Key"
 msgstr ""
 
 #: classes/views/displays/mb_advanced.php:101
-#: js/editor.js:791
+#: js/editor.js:793
 msgid "Detail Page Slug"
 msgstr ""
 
 #: classes/views/displays/mb_advanced.php:102
-#: js/editor.js:805
+#: js/editor.js:807
 msgid "Example: If parameter name is 'contact', the url would be like %1$s/selected-page?contact=2. If this entry is linked to a post, the post permalink will be used instead."
 msgstr ""
 
@@ -602,13 +606,13 @@ msgstr ""
 #: classes/views/displays/mb_dyncontent.php:10
 #: classes/views/displays/mb_dyncontent.php:13
 #: classes/views/displays/mb_dyncontent.php:22
-#: js/editor.js:2496
+#: js/editor.js:2655
 msgid "Detail Page"
 msgstr ""
 
 #: classes/views/displays/mb_dyncontent.php:10
 #: classes/views/displays/mb_dyncontent.php:15
-#: js/editor.js:2490
+#: js/editor.js:2649
 msgid "Listing Page"
 msgstr ""
 
@@ -635,7 +639,7 @@ msgstr ""
 
 #: classes/views/displays/mb_dyncontent.php:51
 #: classes/views/editor/wysiwyg.php:7
-msgid "The HTML for your page. If 'All Entries' is selected above, this content will be repeated for each entry. The field ID and Key work synonymously, although there are times one choice may be better. If you are panning to copy your view settings to other blogs, use the Key since they will be copied and the ids may differ from blog to blog."
+msgid "The HTML for the page. If 'All Entries' is selected above, this content will be repeated for each entry. The field ID and Key work synonymously, although there are times one choice may be better. If you are panning to copy the view settings to other blogs, use the Key since they will be copied and the ids may differ from blog to blog."
 msgstr ""
 
 #: classes/views/displays/mb_dyncontent.php:58
@@ -645,7 +649,7 @@ msgstr ""
 
 #: classes/views/displays/mb_dyncontent.php:60
 #: classes/views/editor/wysiwyg.php:14
-msgid "It is recommended to check this box if you include a <table> tag in the Before Content box. If you are editing a view and notice the visual tab is selected and your table HTML is missing, you can switch to the HTML tab, go up to your url in your browser and hit enter to reload the page. As long as the settings have not been saved, your old HTML will be back to way it was before loading it in the visual tab."
+msgid "It is recommended to check this box if you include a <table> tag in the Before Content box. If you are editing a view and notice the visual tab is selected and the table HTML is missing, you can switch to the HTML tab, go up to the url in your browser and hit enter to reload the page. As long as the settings have not been saved, the old HTML will be back to way it was before loading it in the visual tab."
 msgstr ""
 
 #: classes/views/displays/mb_dyncontent.php:70
@@ -665,8 +669,8 @@ msgid "This is not displayed anywhere, but is just for your reference. (optional
 msgstr ""
 
 #: classes/views/displays/mb_form_disp_type.php:9
-#: js/editor.js:2148
-#: js/index.js:208
+#: js/editor.js:2221
+#: js/index.js:233
 msgid "Use Entries from Form"
 msgstr ""
 
@@ -695,7 +699,7 @@ msgid "Entry Key"
 msgstr ""
 
 #: classes/views/displays/order_row.php:21
-#: js/editor.js:3099
+#: js/editor.js:3258
 msgid "Random"
 msgstr ""
 
@@ -725,7 +729,7 @@ msgid "Hide"
 msgstr ""
 
 #: classes/views/displays/where_options.php:36
-#: js/editor.js:3117
+#: js/editor.js:3276
 msgid "Date options: 'NOW' or a date in yyyy-mm-dd format."
 msgstr ""
 
@@ -743,8 +747,16 @@ msgstr ""
 msgid "is"
 msgstr ""
 
-#: classes/views/index/new-view-icons.php:26
+#: classes/views/index/new-view-icons.php:29
 msgid "Create view"
+msgstr ""
+
+#: classes/views/settings/messages.php:8
+msgid "Load More Button Text"
+msgstr ""
+
+#: classes/views/settings/messages.php:9
+msgid "The text used in the Load More button that appears in views with AJAX Pagination."
 msgstr ""
 
 #: classes/widgets/FrmListEntries.php:12
@@ -809,7 +821,7 @@ msgstr ""
 
 #: js/dom.js:479
 #: js/editor.js:460
-#: js/editor.js:6642
+#: js/editor.js:6801
 msgid "Cancel"
 msgstr ""
 
@@ -826,27 +838,27 @@ msgid "Search for a form field"
 msgstr ""
 
 #: js/editor.js:152
-#: js/index.js:226
+#: js/index.js:367
 msgid "The new %1$s is coming soon."
 msgstr ""
 
 #: js/editor.js:157
-#: js/index.js:231
+#: js/index.js:372
 msgid "Calendar Editor"
 msgstr ""
 
 #: js/editor.js:171
-#: js/index.js:245
+#: js/index.js:386
 msgid "COMING SOON"
 msgstr ""
 
 #: js/editor.js:179
-#: js/index.js:253
+#: js/index.js:394
 msgid "to receive news about the latest updates."
 msgstr ""
 
 #: js/editor.js:204
-#: js/index.js:264
+#: js/index.js:405
 msgid "Subscribe to Formidable Forms"
 msgstr ""
 
@@ -854,530 +866,571 @@ msgstr ""
 msgid "All content associated with this section will be deleted. Copy it and paste it into another section or it will be lost."
 msgstr ""
 
-#: js/editor.js:715
+#: js/editor.js:716
 msgid "Switch to Classic"
 msgstr ""
 
-#: js/editor.js:729
-#: js/index.js:178
+#: js/editor.js:730
+#: js/index.js:249
 msgid "View Name"
 msgstr ""
 
-#: js/editor.js:903
+#: js/editor.js:891
+msgid "Pagination Type"
+msgstr ""
+
+#: js/editor.js:896
+msgid "Reload full page"
+msgstr ""
+
+#: js/editor.js:897
+msgid "AJAX pagination"
+msgstr ""
+
+#: js/editor.js:898
+msgid "Load more entries"
+msgstr ""
+
+#: js/editor.js:899
+msgid "Infinite scroll"
+msgstr ""
+
+#: js/editor.js:956
 msgid "Calendar Settings"
 msgstr ""
 
-#: js/editor.js:1052
+#: js/editor.js:1029
+msgid "Select a form field that contains values like 1 week, 2 weeks, 1 year, etc. This will set the repeat period for each event."
+msgstr ""
+
+#: js/editor.js:1105
 msgid "Grid Style Settings"
 msgstr ""
 
-#: js/editor.js:1064
+#: js/editor.js:1117
 msgid "Number of grid columns"
 msgstr ""
 
-#: js/editor.js:1065
+#: js/editor.js:1118
 msgid "Row gap"
 msgstr ""
 
-#: js/editor.js:1066
+#: js/editor.js:1119
 msgid "Column gap"
 msgstr ""
 
-#: js/editor.js:1082
+#: js/editor.js:1135
 msgid "Custom classes"
 msgstr ""
 
-#: js/editor.js:1095
+#: js/editor.js:1148
 msgid "Table Settings"
 msgstr ""
 
-#: js/editor.js:1101
+#: js/editor.js:1154
 msgid "Row Style"
 msgstr ""
 
-#: js/editor.js:1116
+#: js/editor.js:1169
 msgid "Match theme settings"
 msgstr ""
 
-#: js/editor.js:1117
+#: js/editor.js:1170
 msgid "Zebra stripes"
 msgstr ""
 
-#: js/editor.js:1143
+#: js/editor.js:1196
 msgid "Make table responsive"
 msgstr ""
 
-#: js/editor.js:1152
+#: js/editor.js:1205
 msgid "If this is on, the each column will display as a full row when the browser window is smaller than 760px width."
 msgstr ""
 
-#: js/editor.js:1179
+#: js/editor.js:1232
 msgid "Make grid responsive"
 msgstr ""
 
-#: js/editor.js:1187
+#: js/editor.js:1240
 msgid "If this is on, the number of grid columns will go to one when the browser window is smaller than 750px width."
 msgstr ""
 
-#: js/editor.js:1221
+#: js/editor.js:1274
 msgid "Metaboxes"
 msgstr ""
 
-#: js/editor.js:1240
+#: js/editor.js:1293
 msgid "Cell Settings"
 msgstr ""
 
-#: js/editor.js:1254
+#: js/editor.js:1307
 msgid "Done"
 msgstr ""
 
-#: js/editor.js:1298
+#: js/editor.js:1351
 msgid "Switch to Classic View"
 msgstr ""
 
-#: js/editor.js:1346
+#: js/editor.js:1399
 msgid "This is irreversible. You will not be able to change back to a %1$s after updating."
 msgstr ""
 
-#: js/editor.js:1351
-msgid "Switching to classic gives you full control of your HTML, but it means that you will no longer have access to the layout builder or style editor tools."
+#: js/editor.js:1404
+msgid "Switching to classic gives you full control of the HTML, but it means that you will no longer have access to the layout builder or style editor tools."
 msgstr ""
 
-#: js/editor.js:1353
+#: js/editor.js:1406
 msgid "Are you sure you want to switch?"
 msgstr ""
 
-#: js/editor.js:1362
+#: js/editor.js:1415
 msgid "Switch"
 msgstr ""
 
-#: js/editor.js:1432
+#: js/editor.js:1485
 msgid "Small"
 msgstr ""
 
-#: js/editor.js:1433
+#: js/editor.js:1486
 msgid "Regular"
 msgstr ""
 
-#: js/editor.js:1434
+#: js/editor.js:1487
 msgid "Large"
 msgstr ""
 
-#: js/editor.js:1435
+#: js/editor.js:1488
 msgid "Larger"
 msgstr ""
 
-#: js/editor.js:1436
+#: js/editor.js:1489
 msgid "Custom"
 msgstr ""
 
-#: js/editor.js:1461
+#: js/editor.js:1514
 msgid "Typography"
 msgstr ""
 
-#: js/editor.js:1480
+#: js/editor.js:1533
 msgid "Background"
 msgstr ""
 
-#: js/editor.js:1614
+#: js/editor.js:1667
 msgid "Border"
 msgstr ""
 
-#: js/editor.js:1670
+#: js/editor.js:1723
 msgid "Dotted"
 msgstr ""
 
-#: js/editor.js:1671
+#: js/editor.js:1724
 msgid "Dashed"
 msgstr ""
 
-#: js/editor.js:1672
+#: js/editor.js:1725
 msgid "Solid"
 msgstr ""
 
-#: js/editor.js:1673
+#: js/editor.js:1726
 msgid "Double"
 msgstr ""
 
-#: js/editor.js:1674
+#: js/editor.js:1727
 msgid "Groove"
 msgstr ""
 
-#: js/editor.js:1675
+#: js/editor.js:1728
 msgid "Ridge"
 msgstr ""
 
-#: js/editor.js:1676
+#: js/editor.js:1729
 msgid "Inset"
 msgstr ""
 
-#: js/editor.js:1677
+#: js/editor.js:1730
 msgid "Outset"
 msgstr ""
 
-#: js/editor.js:1678
+#: js/editor.js:1731
 msgid "None"
 msgstr ""
 
-#: js/editor.js:1679
+#: js/editor.js:1732
 msgid "Hidden"
 msgstr ""
 
-#: js/editor.js:1731
+#: js/editor.js:1784
 msgid "Border radius"
 msgstr ""
 
-#: js/editor.js:1834
+#: js/editor.js:1887
 msgid "Padding"
 msgstr ""
 
-#: js/editor.js:2051
+#: js/editor.js:2109
 msgid "Copy this View to other sites when Formidable Forms is activated"
 msgstr ""
 
-#: js/editor.js:2081
+#: js/editor.js:2131
 msgid "Show code for this view"
 msgstr ""
 
-#: js/editor.js:2111
-msgid "This box is forcibly checked if you include a <table> tag in the Before Content box. If you are editing a view and notice the visual tab is selected and your table HTML is missing, you can switch to the HTML tab, close the content pop up, and reopen it. As long as the settings have not been saved, your old HTML will be back to way it was before loading it in the visual tab. While this is checked, the preview will also display the HTML as code."
+#: js/editor.js:2184
+msgid "This box is forcibly checked if you include a <table> tag in the Before Content box. If you are editing a view and notice the visual tab is selected and the table HTML is missing, you can switch to the HTML tab, close the content pop up, and reopen it. As long as the settings have not been saved, the old HTML will be back to way it was before loading it in the visual tab. While this is checked, the preview will also display the HTML as code."
 msgstr ""
 
-#: js/editor.js:2121
+#: js/editor.js:2194
 msgid "Filter Content"
 msgstr ""
 
-#: js/editor.js:2126
+#: js/editor.js:2199
 msgid "Run Formidable shortcodes only"
 msgstr ""
 
-#: js/editor.js:2127
+#: js/editor.js:2200
 msgid "Add paragraphs and process shortcodes"
 msgstr ""
 
-#: js/editor.js:2128
+#: js/editor.js:2201
 msgid "Run all content through WordPress (not recommended)"
 msgstr ""
 
-#: js/editor.js:2159
-#: js/index.js:275
+#: js/editor.js:2232
+#: js/index.js:416
 msgid "Select datasource"
 msgstr ""
 
-#: js/editor.js:2336
+#: js/editor.js:2409
 msgid "Grid view"
 msgstr ""
 
-#: js/editor.js:2355
+#: js/editor.js:2428
 msgid "Table view"
 msgstr ""
 
-#: js/editor.js:2367
+#: js/editor.js:2440
 msgid "Single entry"
 msgstr ""
 
-#: js/editor.js:2433
+#: js/editor.js:2515
+#: js/index.js:291
+msgid "Insert view into application"
+msgstr ""
+
+#: js/editor.js:2592
 msgid "Copy"
 msgstr ""
 
-#: js/editor.js:2623
+#: js/editor.js:2782
 msgid "Add After Content"
 msgstr ""
 
-#: js/editor.js:2624
+#: js/editor.js:2783
 msgid "Add Before Content"
 msgstr ""
 
-#: js/editor.js:2653
-#: js/editor.js:2771
+#: js/editor.js:2812
+#: js/editor.js:2930
 msgid "Filter entries"
 msgstr ""
 
-#: js/editor.js:2663
-#: js/editor.js:3239
+#: js/editor.js:2822
+#: js/editor.js:3398
 msgid "Sort entries"
 msgstr ""
 
-#: js/editor.js:2676
+#: js/editor.js:2835
 msgid "Manage columns"
 msgstr ""
 
-#: js/editor.js:2695
+#: js/editor.js:2854
 msgid "Layout builder"
 msgstr ""
 
-#: js/editor.js:2910
+#: js/editor.js:3069
 msgid "Add new group"
 msgstr ""
 
-#: js/editor.js:2986
+#: js/editor.js:3145
 msgid "Enter value"
 msgstr ""
 
-#: js/editor.js:3028
+#: js/editor.js:3187
 msgid "And"
 msgstr ""
 
-#: js/editor.js:3029
-#: js/editor.js:4759
-#: js/editor.js:4774
+#: js/editor.js:3188
+#: js/editor.js:4918
+#: js/editor.js:4933
 msgid "Or"
 msgstr ""
 
-#: js/editor.js:3081
+#: js/editor.js:3240
 msgid "Select Field"
 msgstr ""
 
-#: js/editor.js:3145
+#: js/editor.js:3304
 msgid "is equal to"
 msgstr ""
 
-#: js/editor.js:3146
+#: js/editor.js:3305
 msgid "is NOT equal to"
 msgstr ""
 
-#: js/editor.js:3166
-#: js/editor.js:3373
-#: js/editor.js:3754
-#: js/editor.js:6666
+#: js/editor.js:3325
+#: js/editor.js:3532
+#: js/editor.js:3913
+#: js/editor.js:6825
 msgid "Update view"
 msgstr ""
 
-#: js/editor.js:3344
+#: js/editor.js:3503
 msgid "Add filter"
 msgstr ""
 
-#: js/editor.js:3346
+#: js/editor.js:3505
 msgid "Add row"
 msgstr ""
 
-#: js/editor.js:3408
+#: js/editor.js:3567
 msgid "Manage table columns"
 msgstr ""
 
-#: js/editor.js:3421
+#: js/editor.js:3580
 msgid "Selected fields"
 msgstr ""
 
-#: js/editor.js:3425
+#: js/editor.js:3584
 msgid "Unselected fields"
 msgstr ""
 
-#: js/editor.js:4330
+#: js/editor.js:4489
 msgid "Column Name"
 msgstr ""
 
-#: js/editor.js:4346
+#: js/editor.js:4505
 msgid "Actions"
 msgstr ""
 
-#: js/editor.js:4393
+#: js/editor.js:4552
 msgid "Add link to details page"
 msgstr ""
 
-#: js/editor.js:4422
+#: js/editor.js:4581
 msgid "Delete"
 msgstr ""
 
-#: js/editor.js:4592
+#: js/editor.js:4751
 msgid "This form has no entries"
 msgstr ""
 
-#: js/editor.js:4595
+#: js/editor.js:4754
 msgid "You can still add fields to this view. After receiving form submissions entries will be displayed here"
 msgstr ""
 
-#: js/editor.js:4603
+#: js/editor.js:4762
 msgid "Or select another form with entries in the Advanced Settings"
 msgstr ""
 
-#: js/editor.js:4631
+#: js/editor.js:4790
 msgid "Start adding content"
 msgstr ""
 
-#: js/editor.js:4711
+#: js/editor.js:4870
 msgid "This table has no columns set"
 msgstr ""
 
-#: js/editor.js:4715
+#: js/editor.js:4874
 msgid "Click \"Manage columns\" to start adding columns."
 msgstr ""
 
-#: js/editor.js:4727
-msgid "Build your repeatable layout"
+#: js/editor.js:4886
+msgid "Build a repeatable layout"
 msgstr ""
 
-#: js/editor.js:4730
-msgid "Create a layout to present your data by clicking or dragging the rows above"
+#: js/editor.js:4889
+msgid "Create a layout to present form data by clicking or dragging the rows above"
 msgstr ""
 
-#: js/editor.js:4762
+#: js/editor.js:4921
 msgid "start adding content"
 msgstr ""
 
-#: js/editor.js:4767
+#: js/editor.js:4926
 msgid "into a single column view"
 msgstr ""
 
-#: js/editor.js:4777
+#: js/editor.js:4936
 msgid "continue anyway"
 msgstr ""
 
-#: js/editor.js:4799
-msgid "Build your custom layout for the page"
+#: js/editor.js:4958
+msgid "Build a custom layout for the page"
 msgstr ""
 
-#: js/editor.js:4802
+#: js/editor.js:4961
 msgid "Drag and drop rows into working area"
 msgstr ""
 
-#: js/editor.js:4803
+#: js/editor.js:4962
 msgid "You can drop rows in a column and build complex layouts"
 msgstr ""
 
-#: js/editor.js:4819
+#: js/editor.js:4978
 msgid "The single entry detail view is not active"
 msgstr ""
 
-#: js/editor.js:4821
+#: js/editor.js:4980
 msgid "This content is used to show more information about a single entry."
 msgstr ""
 
-#: js/editor.js:4822
+#: js/editor.js:4981
 msgid "To use this page, include the [detaillink] shortcode in the content for All Entries."
 msgstr ""
 
-#: js/editor.js:4863
+#: js/editor.js:5022
 msgid "Layout Builder"
 msgstr ""
 
-#: js/editor.js:4873
+#: js/editor.js:5032
 msgid "Add detail link"
 msgstr ""
 
-#: js/editor.js:4932
-msgid "Build your layout"
+#: js/editor.js:5091
+msgid "Build a layout"
 msgstr ""
 
-#: js/editor.js:5001
+#: js/editor.js:5160
 msgid "Build layout"
 msgstr ""
 
-#: js/editor.js:5002
+#: js/editor.js:5161
 msgid "Drag and drop layout options to build a layout. You can also click an option to insert it."
 msgstr ""
 
-#: js/editor.js:5128
+#: js/editor.js:5287
 msgid "Close"
 msgstr ""
 
-#: js/editor.js:5145
+#: js/editor.js:5304
 msgid "Are you ready to add data?"
 msgstr ""
 
-#: js/editor.js:5146
-msgid "If you are happy with your layout, save it and start adding content to your view."
+#: js/editor.js:5305
+msgid "If you are happy with the layout, save it and start adding content to the view."
 msgstr ""
 
-#: js/editor.js:5163
-msgid "Add your content"
+#: js/editor.js:5322
+msgid "Add content"
 msgstr ""
 
-#: js/editor.js:5164
-msgid "Add data from your form to separate layout cells."
+#: js/editor.js:5323
+msgid "Add data from the form to separate layout cells."
 msgstr ""
 
-#: js/editor.js:5456
+#: js/editor.js:5615
 msgid "You've reached the maximum level of nesting. Try to delete this box or use another one."
 msgstr ""
 
-#: js/editor.js:5460
+#: js/editor.js:5619
 msgid "Got it!"
 msgstr ""
 
-#: js/editor.js:5922
+#: js/editor.js:6081
 msgid "Edit Before Content"
 msgstr ""
 
-#: js/editor.js:5922
+#: js/editor.js:6081
 msgid "Edit After Content"
 msgstr ""
 
-#: js/editor.js:5924
+#: js/editor.js:6083
 msgid "Edit Listing Page Content"
 msgstr ""
 
-#: js/editor.js:5924
+#: js/editor.js:6083
 msgid "Edit Detail Page Content"
 msgstr ""
 
-#: js/editor.js:5936
-msgid "Navigate across your layout"
+#: js/editor.js:6095
+msgid "Navigate across the layout"
 msgstr ""
 
-#: js/editor.js:5937
+#: js/editor.js:6096
 msgid "Start editing the content of multiple cells at once."
 msgstr ""
 
-#: js/editor.js:6761
+#: js/editor.js:6920
 msgid "Additional view settings"
 msgstr ""
 
-#: js/editor.js:6772
+#: js/editor.js:6931
 msgid "Filter form entries, sort data, and toggle the layout builder at any time."
 msgstr ""
 
-#: js/editor.js:6774
+#: js/editor.js:6933
 msgid "Filter and sort form entries at any time."
 msgstr ""
 
-#: js/editor.js:6872
+#: js/editor.js:7031
 msgid "Save layout"
 msgstr ""
 
-#: js/editor.js:7033
+#: js/editor.js:7192
 msgid "View successfully saved!"
 msgstr ""
 
-#: js/index.js:13
+#: js/frm_application.js:13
+msgid "view"
+msgstr ""
+
+#: js/index.js:28
 msgid "Select View type"
 msgstr ""
 
-#: js/index.js:30
+#: js/index.js:45
 msgid "Select Data Source"
 msgstr ""
 
-#: js/index.js:119
-msgid "Create a new view from scratch"
-msgstr ""
-
-#: js/index.js:123
+#: js/index.js:148
 msgid "Create a view and write less code"
 msgstr ""
 
-#: js/index.js:127
+#: js/index.js:152
 msgid "Insert entries into a calendar"
 msgstr ""
 
-#: js/index.js:131
+#: js/index.js:156
 msgid "Insert entries into a table"
 msgstr ""
 
-#: js/index.js:298
-#: js/index.js:418
+#: js/index.js:160
+msgid "Create a new view from scratch"
+msgstr ""
+
+#: js/index.js:164
+msgid "Ready Made Solutions"
+msgstr ""
+
+#: js/index.js:164
+msgid "Start from an application template"
+msgstr ""
+
+#: js/index.js:437
+#: js/index.js:554
 msgid "Back"
 msgstr ""
 
-#: js/index.js:309
-#: js/index.js:431
+#: js/index.js:448
+#: js/index.js:567
 msgid "Create a view"
 msgstr ""
 
-#: js/index.js:336
+#: js/index.js:475
 msgid "Customize view"
 msgstr ""
 
-#: js/index.js:369
+#: js/index.js:508
 msgid "Select columns that should be displayed in view"
 msgstr ""
 
@@ -1394,11 +1447,11 @@ msgid "Build a custom layout to display entries"
 msgstr ""
 
 #: js/welcome.js:53
-msgid "Create your unique card layout to present your data. This card will repeat for each form entry."
+msgid "Create a unique card layout to present form data. This card will repeat for each form entry."
 msgstr ""
 
 #: js/welcome.js:60
-msgid "Add data to your View"
+msgid "Add data to the View"
 msgstr ""
 
 #: js/welcome.js:61
@@ -1406,7 +1459,7 @@ msgid "Click the plus icon then add or edit content in each box. The editor moda
 msgstr ""
 
 #: js/welcome.js:68
-msgid "Filter and sort your form entries"
+msgid "Filter and sort form entries"
 msgstr ""
 
 #: js/welcome.js:69

@@ -130,6 +130,7 @@ class FrmViewsPreviewController {
 	private function set_entries_for_preview() {
 		$filter    = FrmViewsPreviewHelper::sanitize_filter( FrmAppHelper::get_param( 'filter', '', 'post' ) );
 		$sort      = FrmViewsPreviewHelper::sanitize_sort( FrmAppHelper::get_param( 'sort', '', 'post' ) );
+
 		$limit     = $this->get_limit_value_from_post_request();
 		$page_size = $this->get_page_size_value_from_post_request();
 

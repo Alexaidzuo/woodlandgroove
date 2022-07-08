@@ -42,6 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php echo FrmProFormsHelper::get_prev_button($form, 'button-secondary'); ?>
 				<input class="button-primary" type="submit" value="<?php echo esc_attr($submit); ?>" <?php do_action('frm_submit_button_action', $form, $form_action); ?> />
 				<?php echo FrmProFormsHelper::get_draft_link($form); ?>
+				<?php echo FrmProFormsHelper::get_start_over_html( $form ); ?>
 			</p>
 			<div class="clear"></div>
 				<?php

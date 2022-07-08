@@ -208,6 +208,17 @@ class FrmProXMLController {
 		}
 
 		$fields = FrmField::get_all_for_form( $form_id, '', 'include', 'include' );
+
+		/**
+		 * Allows modifying fields for CSV import mapping.
+		 *
+		 * @since 5.4
+		 *
+		 * @param object[] $fields Array of field objects.
+		 * @param array    $args   Contains `form_id`, `context` and `meta`.
+		 */
+		$fields = apply_filters( 'frm_pro_fields_for_csv_mapping', $fields, compact( 'form_id' ) );
+
 		include FrmProAppHelper::plugin_path() . '/classes/views/xml/map_csv_fields.php';
 	}
 

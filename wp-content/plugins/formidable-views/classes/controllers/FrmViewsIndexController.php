@@ -55,15 +55,37 @@ class FrmViewsIndexController {
 	 * Register the (possibly minified) main index JavaScript file.
 	 */
 	private static function register_index_js() {
-		$version         = FrmViewsAppHelper::plugin_version();
 		$use_minified_js = FrmViewsAppHelper::use_minified_js_file();
 		$index_js_path   = FrmViewsAppHelper::plugin_url() . '/js/index' . FrmViewsAppHelper::js_suffix() . '.js';
+		$dependencies    = array( 'wp-i18n' );
+		$version         = FrmViewsAppHelper::plugin_version();
+
+		if ( class_exists( 'FrmApplicationTemplate' ) && class_exists( 'FrmProApplication' ) ) {
+			$dependencies[] = 'jquery-ui-autocomplete';
+			$dependencies[] = 'formidable_dom';
+		}
 
 		if ( ! $use_minified_js ) {
 			FrmViewsAppHelper::add_dom_script();
 		}
 
-		wp_register_script( 'formidable_views_index', $index_js_path, array( 'wp-i18n' ), $version, true );
+		wp_register_script( 'formidable_views_index', $index_js_path, $dependencies, $version, true );
+
+		if ( 1 === FrmAppHelper::simple_get( 'triggerNewViewModal', 'absint' ) ) {
+			$application_id = FrmAppHelper::simple_get( 'applicationId', 'absint' );
+			if ( $application_id ) {
+				$application = get_term( $application_id, 'frm_application' );
+				if ( $application instanceof WP_Term ) {
+					wp_localize_script( 'formidable_views_index', 'frmAutocompleteApplicationName', $application->name );
+				}
+			}
+		}
+
+		$applications_cap = is_callable( 'FrmProApplicationsHelper::get_custom_applications_capability' ) ? FrmProApplicationsHelper::get_custom_applications_capability() : 'frm_edit_forms';
+		$js_vars          = array(
+			'canAddApplications' => current_user_can( $applications_cap ) ? 1 : 0,
+		);
+		wp_localize_script( 'formidable_views_index', 'frmViewsIndexVars', $js_vars );
 	}
 
 	private static function register_new_view_icons() {

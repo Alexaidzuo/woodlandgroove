@@ -125,11 +125,28 @@ class FrmProFieldsController {
 
 		self::add_currency_field_attributes( $field, $add_html );
 
+		self::add_html_autocomplete( $field, $add_html );
+
 		if ( $echo ) {
 			echo $add_html;
 		}
 
 		return $add_html;
+	}
+
+	/**
+	 * Add autocomplete attribute to the field html.
+	 *
+	 * @since 5.4.1
+	 *
+	 * @param array  $field The field properties.
+	 * @param string $add_html The field html.
+	 * @return void
+	 */
+	private static function add_html_autocomplete( $field, &$add_html ) {
+		if ( ! empty( $field['autocomplete'] ) ) {
+			$add_html .= 'autocomplete="' . esc_attr( $field['autocomplete'] ) . '"';
+		}
 	}
 
 	public static function setup_input_masks( $field ) {
@@ -386,7 +403,12 @@ class FrmProFieldsController {
 
 	/**
 	 * @since 4.0
-	 * @param array $args - includes 'field', 'display', and 'values'
+	 *
+	 * @param array $args {
+	 *     @type array $display
+	 *     @type array $field
+	 * }
+	 * @return void
 	 */
 	public static function advanced_field_options( $args ) {
 		$display = $args['display'];
@@ -394,23 +416,27 @@ class FrmProFieldsController {
 
 		$is_checkbox = FrmField::is_field_type( $field, 'checkbox' );
 		$is_radio    = FrmField::is_field_type( $field, 'radio' );
-		if ( $display['type'] == 'radio' || $display['type'] == 'checkbox' || $is_radio || $is_checkbox ) {
+		if ( $display['type'] === 'radio' || $display['type'] === 'checkbox' || $is_radio || $is_checkbox ) {
 			self::alignment_setting( $args );
 		}
 
-		if ( isset( $display['prefix'] ) && $display['prefix'] ) {
-			include( FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/prepend-options.php' );
+		if ( ! empty( $display['prefix'] ) ) {
+			include FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/prepend-options.php';
 		}
 
 		if ( $field['type'] === 'divider' && ! empty( $field['repeat'] ) ) {
-			include( FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/repeat-options.php' );
+			include FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/repeat-options.php';
 		}
 
 		if ( 'textarea' === $field['type'] ) {
-			include( FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/auto-grow.php' );
+			include FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/auto-grow.php';
 		}
 
-		if ( isset( $display['visibility'] ) && $display['visibility'] ) {
+		if ( ! empty( $display['autocomplete'] ) ) {
+			self::show_autocomplete_option( $args['field'] );
+		}
+
+		if ( ! empty( $display['visibility'] ) ) {
 			self::show_visibility_option( $args['field'] );
 		}
 	}
@@ -549,6 +575,18 @@ class FrmProFieldsController {
 	 */
 	public static function show_visibility_option( $field ) {
 		include( FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/visibility.php' );
+	}
+
+	/**
+	 * Display the autocomplete option
+	 *
+	 * @since 5.4.1
+	 *
+	 * @param array $field
+	 * @return void
+	 */
+	public static function show_autocomplete_option( $field ) {
+		include FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/back-end/autocomplete.php';
 	}
 
 	/**

@@ -58,16 +58,7 @@ if ( FrmField::is_read_only( $field ) ) {
 		<?php foreach ( $file_settings['mockFiles'] as $file ) { ?>
 			<div class="dz-preview dz-complete dz-image-preview frm_clearfix">
 				<div class="dz-image">
-					<?php
-					if ( ! empty( $file['accessible'] ) && FrmProFileField::file_type_matches_image( $file['type'] ) ) {
-						$src = $file['url'];
-					} elseif ( in_array( $file['ext'], array( 'pdf', 'doc', 'xls', 'docx', 'xlsx' ), true ) ) {
-						$ext = substr( $file['ext'], 0, 3 );
-						$src = FrmProAppHelper::plugin_url() . '/images/' . $ext . '.svg';
-					} else {
-						$src = FrmProAppHelper::plugin_url() . '/images/doc.svg';
-					}
-					?>
+					<?php $src = FrmProFileField::get_safe_file_icon( $file ); ?>
 					<img src="<?php echo esc_attr( $src ); ?>" alt="<?php echo esc_attr( $file['name'] ); ?>" />
 				</div>
 				<div class="dz-column">

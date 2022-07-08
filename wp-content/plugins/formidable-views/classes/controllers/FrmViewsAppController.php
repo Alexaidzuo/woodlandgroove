@@ -13,6 +13,7 @@ class FrmViewsAppController {
 	public static function admin_init() {
 		self::include_updater();
 		self::maybe_remove_beta_inbox_message();
+		self::maybe_force_formidable_block_on_gutenberg_page();
 	}
 
 	private static function maybe_remove_beta_inbox_message() {
@@ -113,5 +114,40 @@ class FrmViewsAppController {
 
 	private static function include_table_views_css() {
 		include FrmViewsAppHelper::plugin_path() . '/css/table-views.css';
+	}
+
+	/**
+	 * @since 5.2
+	 *
+	 * @param string $content
+	 * @param int    $view_id
+	 * @return string
+	 */
+	public static function get_page_shortcode_content( $content, $view_id ) {
+		$shortcode          = '[display-frm-data id="' . $view_id . '" filter="limited"]';
+		$html_comment_start = '<!-- wp:formidable/simple-view {"viewId":"' . $view_id . '","useDefaultLimit":true} -->';
+		$html_comment_end   = '<!-- /wp:formidable/simple-view -->';
+		return $html_comment_start . '<div>' . $shortcode . '</div>' . $html_comment_end;
+	}
+
+	/**
+	 * Automatically insert a Formidable block when loading Gutenberg when $_GET['frmView'] is set.
+	 *
+	 * @since 5.2
+	 *
+	 * @return void
+	 */
+	private static function maybe_force_formidable_block_on_gutenberg_page() {
+		global $pagenow;
+		if ( 'post.php' !== $pagenow ) {
+			return;
+		}
+
+		$view_id = FrmAppHelper::simple_get( 'frmView', 'absint' );
+		if ( ! $view_id || ! is_callable( 'FrmAppController::add_js_to_inject_gutenberg_block' ) ) {
+			return;
+		}
+
+		FrmAppController::add_js_to_inject_gutenberg_block( 'formidable/simple-view', 'viewId', $view_id );
 	}
 }

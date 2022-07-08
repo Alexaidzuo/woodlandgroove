@@ -41,6 +41,8 @@ class FrmViewsDisplay {
 			self::setup_table_view( $view_id );
 		}
 
+		$options['ajax_pagination'] = '1'; // Turn on AJAX pagination by default for new views.
+
 		add_post_meta( $view_id, 'frm_show_count', $show_count );
 		add_post_meta( $view_id, 'frm_options', $options );
 
@@ -115,7 +117,7 @@ class FrmViewsDisplay {
 		wp_update_post(
 			array(
 				'ID'           => $view_id,
-				'post_content' => json_encode( $content ),
+				'post_content' => FrmAppHelper::prepare_and_encode( $content ),
 			)
 		);
 	}
@@ -620,9 +622,9 @@ class FrmViewsDisplay {
 		if ( ! empty( $query['where'] ) ) {
 			$query['where'] = FrmDb::prepend_and_or_where( 'WHERE ', $query['where'] );
 		}
-
 		$query['order'] = rtrim( $query['order'], ', ' );
 		$query          = implode( ' ', $query ) . $args['limit'];
+
 		$entry_ids      = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return $entry_ids;
@@ -691,7 +693,6 @@ class FrmViewsDisplay {
 
 		$order = $args['order_array'][ $o_key ];
 		FrmDb::esc_order_by( $order );
-
 		$o_key = sanitize_title( $o_key );
 
 		// if field is some type of post field
@@ -701,20 +702,22 @@ class FrmViewsDisplay {
 			if ( 'post_custom' === $o_field->field_options['post_field'] ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$query['select'] .= $wpdb->prepare( ' LEFT JOIN ' . $wpdb->postmeta . ' pm' . $o_key . ' ON pm' . $o_key . '.post_id=it.post_id AND pm' . $o_key . '.meta_key = %s ', $o_field->field_options['custom_field'] );
-				$query['order']  .= 'CASE when pm' . $o_key . '.meta_value IS NULL THEN 1 ELSE 0 END, pm' . $o_key . '.meta_value ';
+				$query['order']  .= 'CASE WHEN pm' . $o_key . '.meta_value IS NULL THEN 1 ELSE 0 END, pm' . $o_key . '.meta_value ';
 				$query['order']  .= FrmProAppHelper::maybe_query_as_number( $o_field->type );
 				$query['order']  .= $order . ', ';
 			} elseif ( 'post_category' !== $o_field->field_options['post_field'] ) {
 				// if field is a non-category post field
-				$query['select'] .= $first_order ? ' INNER ' : ' LEFT ';
-				$query['select'] .= 'JOIN ' . sanitize_title( $wpdb->posts ) . ' p' . $o_key . ' ON p' . $o_key . '.ID=it.post_id ';
-				$query['order']  .= 'CASE p' . $o_key . '.' . sanitize_title( $o_field->field_options['post_field'] ) . " WHEN '' THEN 1 ELSE 0 END, p$o_key." . sanitize_title( $o_field->field_options['post_field'] ) . ' ' . $order . ', ';
+				$post_alias       = 'p' . $o_key;
+				$entry_meta_alias = 'em' . $o_key;
+				$post_field       = esc_sql( $o_field->field_options['post_field'] );
+				$query['select'] .= ' LEFT JOIN ' . esc_sql( $wpdb->posts ) . " $post_alias ON $post_alias.ID=it.post_id LEFT JOIN " . $wpdb->prefix . "frm_item_metas $entry_meta_alias ON $entry_meta_alias.item_id=it.id AND $entry_meta_alias.field_id=" . $o_field->id;
+				$query['order']  .= "CASE WHEN $post_alias." . $post_field . " IS NULL THEN $entry_meta_alias.meta_value ELSE $post_alias." . $post_field . ' END ' . $order . ', ';
 			}
 		} elseif ( is_numeric( $args['order_by_array'][ $o_key ] ) ) {
 			// if ordering by a normal, non-post field
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$query['select'] .= $wpdb->prepare( ' LEFT JOIN ' . $wpdb->prefix . 'frm_item_metas em' . $o_key . ' ON em' . $o_key . '.item_id=it.id AND em' . $o_key . '.field_id=%d ', $o_field->id );
-			$query['order']  .= 'CASE when em' . $o_key . '.meta_value IS NULL THEN 1 ELSE 0 END, em' . $o_key . '.meta_value ';
+			$query['order']  .= 'CASE WHEN em' . $o_key . '.meta_value IS NULL THEN 1 ELSE 0 END, em' . $o_key . '.meta_value ';
 			$query['order']  .= FrmProAppHelper::maybe_query_as_number( $o_field->type );
 			$query['order']  .= $order . ', ';
 

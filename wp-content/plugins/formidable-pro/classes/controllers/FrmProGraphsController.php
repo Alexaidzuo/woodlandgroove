@@ -419,12 +419,27 @@ class FrmProGraphsController {
 		$options = self::get_graph_options( $type, $atts );
 		$graph_package = self::get_graph_package( $type );
 
+		$graph_auto_id = count( $frm_vars['google_graphs']['graphs'] ) + 1;
+		$graph_id      = '_frm_' . strtolower( $type ) . $graph_auto_id;
+
+		/**
+		 * Filter the ID of the graph.
+		 *
+		 * @since 5.4
+		 *
+		 * @param string $graph_id
+		 * @param array  $args {
+		 *     @type int    $graph_auto_id Graph Auto ID.
+		 *     @type string $type          Graph type.
+		 * }
+		 */
+		$graph_id   = apply_filters( 'frm_graph_id', $graph_id, compact( 'graph_auto_id', 'type' ) );
 		$graph_data = array(
-			'type' => $type,
-			'data' => $data,
-			'options' => $options,
-			'package' => $graph_package,
-			'graph_id' => '_frm_' . strtolower( $type ) . ( count( $frm_vars['google_graphs']['graphs'] ) + 1 ),
+			'type'     => $type,
+			'data'     => $data,
+			'options'  => $options,
+			'package'  => $graph_package,
+			'graph_id' => $graph_id,
 		);
 
 		$frm_vars['google_graphs']['graphs'][] = $graph_data;
@@ -1187,8 +1202,13 @@ class FrmProGraphsController {
 				// get total
 				$y_value = array_sum( $meta_values );
 			} elseif ( 'average' === $atts['data_type'] ) {
-				// get average
-				$y_value = array_sum( $meta_values ) / count( $meta_values );
+				if ( ! $meta_values ) {
+					// avoid division by zero
+					$y_value = 0;
+				} else {
+					// get average
+					$y_value = array_sum( $meta_values ) / count( $meta_values );
+				}
 			} else {
 				// get count
 				$y_value = count( $meta_values );
