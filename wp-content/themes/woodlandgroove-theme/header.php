@@ -72,7 +72,7 @@
 
 				<div class="nav-right">
 
-				<?php if(!is_page('wall-of-love') || !is_page('wall-of-love-donation')) : ?>
+				<?php if(!is_page('wall-of-love') && !is_page('wall-of-love-donation')) : ?>
 					<img class="right-logo" src="<?php echo get_template_directory_uri().'/assets/images/grow.webp'; ?>" alt="Help us Grow">
 					<a class="btn btn--cta-donate" href="<?php echo get_site_url()."/donate" ?>">Donate</a>
 				<?php endif; ?>
