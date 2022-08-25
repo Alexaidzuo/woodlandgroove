@@ -3248,10 +3248,6 @@ h6 {
   }
 }
 
-.nav-right .btn:hover {
-  background-color: #458a40;
-}
-
 .right-logo {
   max-height: 40px;
   margin-right: 25px;
@@ -3617,7 +3613,7 @@ h6 {
 }
 
 .btn--cta-donate {
-  background-color: #ddad9f;
+  background-color: #458a40;
   -webkit-transition: 350ms ease;
   -o-transition: 350ms ease;
   transition: 350ms ease;
