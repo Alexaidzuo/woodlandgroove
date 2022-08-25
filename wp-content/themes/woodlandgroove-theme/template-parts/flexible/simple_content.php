@@ -36,7 +36,7 @@ $simple_contents = get_sub_field('simple_contents');
                 <?php
                 if($link) : ?>
                     <div class="simple-content__cta">
-                        <a class="btn btn--cta-donate" href="<?php echo $link['url'];?>"><?php echo $link['title']; ?></a>
+                        <a class="btn btn--donate" href="<?php echo $link['url'];?>"><?php echo $link['title']; ?></a>
                     </div>
                 <?php endif; ?>
             </div>

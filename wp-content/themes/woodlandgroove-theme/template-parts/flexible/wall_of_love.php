@@ -31,7 +31,7 @@ $wall_of_love = get_sub_field('wall_of_love');
 
         <?php if($button) : ?>
             <div class="wall__button col-lg-12">
-                <a class="btn btn--cta-donate" href="<?php echo $button['url']; ?>"><?php echo $button['title']; ?></a>
+                <a class="btn btn--light-brown" href="<?php echo $button['url']; ?>"><?php echo $button['title']; ?></a>
             </div>
         <?php endif;?>
 

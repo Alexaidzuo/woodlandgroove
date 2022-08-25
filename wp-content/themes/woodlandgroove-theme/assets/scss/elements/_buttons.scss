@@ -21,7 +21,25 @@
 }
 
 .btn--cta-donate {
+	background-color: $light-brown;
+	transition: $dur $ease;
+
+	&:hover {
+		background-color: $gray-light;
+	}
+}
+
+.btn--donate {
 	background-color: $green;
+	transition: $dur $ease;
+
+	&:hover {
+		background-color: $gray-light;
+	}
+}
+
+.btn--light-brown {
+	background-color: $light-brown;
 	transition: $dur $ease;
 
 	&:hover {

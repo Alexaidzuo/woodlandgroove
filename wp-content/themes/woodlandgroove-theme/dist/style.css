@@ -3613,13 +3613,35 @@ h6 {
 }
 
 .btn--cta-donate {
-  background-color: #458a40;
+  background-color: #ddad9f;
   -webkit-transition: 350ms ease;
   -o-transition: 350ms ease;
   transition: 350ms ease;
 }
 
 .btn--cta-donate:hover {
+  background-color: #666666;
+}
+
+.btn--donate {
+  background-color: #458a40;
+  -webkit-transition: 350ms ease;
+  -o-transition: 350ms ease;
+  transition: 350ms ease;
+}
+
+.btn--donate:hover {
+  background-color: #666666;
+}
+
+.btn--light-brown {
+  background-color: #ddad9f;
+  -webkit-transition: 350ms ease;
+  -o-transition: 350ms ease;
+  transition: 350ms ease;
+}
+
+.btn--light-brown:hover {
   background-color: #666666;
 }
 
